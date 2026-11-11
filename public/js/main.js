@@ -176,29 +176,32 @@
     lenis.on('scroll', ({ velocity }) => skew(gsap.utils.clamp(-8, 8, velocity * -.25)));
   }
 
-  /* ---------------- BAL: pinned, scrubbed through six ratings ---------------- */
-  const mm = gsap.matchMedia();
+  /* ---------------- BAL: click a rating; the page scrolls past normally ---------------- */
   const balSection = $('[data-bal]'), balProgress = $('[data-bal-progress]');
-  let balTrigger = null;
-  if (balSection) mm.add('(min-width: 901px) and (min-height: 620px)', () => {
-    balTrigger = ScrollTrigger.create({
-      trigger: balSection, pin: '.bal__pin', start: 'top top', end: () => '+=' + innerHeight * 3.2, scrub: true,
-      onUpdate: self => {
-        setBal(Math.min(balTabs.length - 1, Math.floor(self.progress * balTabs.length)));
-        gsap.set(balProgress, { scaleX: self.progress });
-      }
-    });
-    return () => { balTrigger = null; };
-  });
-  balTabs.forEach((t, i) => t.addEventListener('click', () => {
-    if (balTrigger) {
-      const p = (i + .5) / balTabs.length;
-      scrollTo(balTrigger.start + (balTrigger.end - balTrigger.start) * p, { duration: 1 });
-    } else {
+  if (balSection) {
+    const showBal = i => {
       setBal(i);
-      gsap.to(balProgress, { scaleX: (i + 1) / balTabs.length, duration: .8 });
-    }
-  }));
+      gsap.to(balProgress, { scaleX: (i + 1) / balTabs.length, duration: .8, overwrite: true });
+    };
+    // Until the visitor picks a rating, step through them slowly while the section is on screen.
+    let auto = true, balVisible = false, timer = null;
+    const stopAuto = () => { auto = false; clearInterval(timer); };
+    const tick = () => { if (auto && balVisible && !paused) showBal((balIndex + 1) % balTabs.length); };
+    ScrollTrigger.create({ trigger: balSection, start: 'top 70%', end: 'bottom 30%',
+      onToggle: self => { balVisible = self.isActive; } });
+    timer = setInterval(tick, 3200);
+    showBal(0);
+
+    balTabs.forEach((t, i) => {
+      t.addEventListener('click', () => { stopAuto(); showBal(i); });
+      t.addEventListener('keydown', e => {
+        if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+        e.preventDefault(); stopAuto();
+        const n = (i + (e.key === 'ArrowRight' ? 1 : -1) + balTabs.length) % balTabs.length;
+        balTabs[n].focus(); showBal(n);
+      });
+    });
+  }
 
   /* ---------------- Process line burns down ---------------- */
   const steps = $('[data-steps]');

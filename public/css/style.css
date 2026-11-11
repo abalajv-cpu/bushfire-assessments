@@ -226,7 +226,7 @@ h3 { font-family: var(--serif); font-weight: 600; font-size: clamp(1.3rem, 1.8vw
 
 /* ---------- BAL ---------- */
 .bal { position: relative; background: var(--ink-2); border-block: 1px solid var(--line); }
-.bal__pin { min-height: 100svh; display: grid; align-items: center; padding-block: clamp(5rem, 9vh, 7rem) clamp(2rem, 5vh, 4rem); overflow: clip; }
+.bal__pin { display: grid; align-items: center; padding-block: clamp(4.5rem, 10vw, 8rem); overflow: clip; }
 .bal__grid { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: clamp(2rem, 5vw, 5rem); align-items: center; }
 .bal__head { display: grid; gap: 1.3rem; }
 .bal__stage { position: relative; display: grid; min-height: clamp(18rem, 44vh, 26rem); }
