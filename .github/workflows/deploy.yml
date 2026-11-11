@@ -1,0 +1,68 @@
+name: Build and deploy
+
+# Rebuilds the site with fresh bushfire data and publishes it to GitHub Pages.
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '7,37 * * * *'   # every 30 minutes: refresh the Current Bushfires page
+    - cron: '50 13 * * *'    # once a day (about midnight AEST): also save data and articles to the repository
+  workflow_dispatch:         # allows a manual run from the Actions tab
+
+permissions:
+  contents: write            # to save the weekly article back to the repository
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Find the site address
+        id: pages
+        uses: actions/configure-pages@v5
+
+      - run: npm ci
+
+      - name: Fetch bushfire data, write the weekly article, build
+        run: npm run build
+        env:
+          SITE_URL: ${{ steps.pages.outputs.origin }}
+          SITE_BASE: ${{ steps.pages.outputs.base_path }}
+
+      # Past weekly articles only exist if they are saved in the repository.
+      # Done once a day (and on manual runs) to keep the history tidy. This also counts as
+      # repository activity, which stops GitHub pausing the schedule after 60 quiet days.
+      - name: Save data and weekly article to the repository
+        if: github.event.schedule == '50 13 * * *' || github.event_name == 'workflow_dispatch'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/data/incidents.json public/data/hotspots.json src/content/articles/bushfire-update-*.md
+          git diff --cached --quiet || git commit -m "Update bushfire data and weekly article"
+          git push
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
