@@ -1,0 +1,17 @@
+{
+  "name": "bushfire-assessments",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev --port 4173",
+    "update": "node scripts/fetch-incidents.mjs && node scripts/generate-roundup.mjs",
+    "build": "npm run update && astro build && node scripts/apply-base.mjs",
+    "build:offline": "astro build && node scripts/apply-base.mjs",
+    "preview": "astro preview --port 4173"
+  },
+  "dependencies": {
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.4",
+    "astro": "^7.4.10"
+  }
+}

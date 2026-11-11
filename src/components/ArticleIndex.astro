@@ -1,0 +1,39 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from './PageHero.astro';
+import ArticleCard from './ArticleCard.astro';
+const { articles, categories, active = null } = Astro.props; // active = { name, slug } on category pages
+const crumbs = active
+  ? [{ label: 'Articles', href: '/blog/' }, { label: active.name, href: `/blog/category/${active.slug}/` }]
+  : [{ label: 'Articles', href: '/blog/' }];
+const title = active ? `${active.name} Articles | Bushfire Assessments` : 'Bushfire Articles & Guides | BAL Ratings, Rules & Approvals';
+const description = active
+  ? `Articles about ${active.name.toLowerCase()}: plain-English bushfire guidance for building and subdividing in Queensland and New South Wales.`
+  : 'Plain-English articles on BAL ratings, bushfire prone land and the bushfire rules for building and subdividing in Queensland and New South Wales.';
+const [first, ...rest] = articles;
+const schema = [{
+  '@context': 'https://schema.org', '@type': 'Blog', name: title,
+  url: new URL(active ? `/blog/category/${active.slug}/` : '/blog/', Astro.site).href,
+  blogPost: articles.map((a) => ({ '@type': 'BlogPosting', headline: a.data.title, datePublished: a.data.date.toISOString(), url: new URL(`/blog/${a.id}/`, Astro.site).href })),
+}];
+---
+<Base title={title} description={description} breadcrumbs={crumbs} schema={schema}>
+  <PageHero eyebrow={active ? 'Category' : 'Articles'} title={active ? active.name : 'Bushfire rules, in plain English'} breadcrumbs={crumbs} cta={false}
+    lead={active ? `Everything we have published about ${active.name.toLowerCase()}.` : 'Articles and guides on the ratings, reports and regulations that affect building in bushfire prone areas.'} />
+
+  <section class="container block">
+    <nav class="filter" aria-label="Article categories" data-reveal>
+      <a href="/blog/" aria-current={active ? undefined : 'page'}>All</a>
+      {categories.map((c) => <a href={`/blog/category/${c.slug}/`} aria-current={active?.slug === c.slug ? 'page' : undefined}>{c.name} <small>{c.count}</small></a>)}
+      <a class="filter__rss" href="/rss.xml">RSS</a>
+    </nav>
+
+    {first && <ArticleCard article={first} featured />}
+    {rest.length > 0 && (
+      <div class="article-grid">
+        {rest.map((a) => <ArticleCard article={a} />)}
+      </div>
+    )}
+    {!first && <p class="muted">No articles yet.</p>}
+  </section>
+</Base>

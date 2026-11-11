@@ -1,0 +1,42 @@
+---
+import { site } from '../data/site.js';
+const { state = null, heading = 'Tell us about your site.' } = Astro.props;
+---
+<section class="quote" id="quote">
+  <div class="quote__glow" aria-hidden="true"></div>
+  <div class="container quote__grid">
+    <div>
+      <p class="eyebrow" data-reveal>Get started</p>
+      <h2 class="h1" data-split>{heading}</h2>
+      <p class="muted" data-reveal>Send the address and what you are planning. We will come back with a quote for your <span data-qld="Queensland" data-nsw="New South Wales">{state === 'nsw' ? 'New South Wales' : 'Queensland'}</span> property.</p>
+      <ul class="contact-list" data-reveal>
+        <li><span>Call</span><a href={site.phoneHref}>{site.phone}</a></li>
+        <li><span>Email</span><a href={`mailto:${site.email}`}>{site.email}</a></li>
+      </ul>
+    </div>
+    <form class="form" data-form data-reveal novalidate>
+      <label>Name<input type="text" name="name" autocomplete="name" required></label>
+      <div class="form__row">
+        <label>Email<input type="email" name="email" autocomplete="email" required></label>
+        <label>Phone<input type="tel" name="phone" autocomplete="tel"></label>
+      </div>
+      <label>Property address<input type="text" name="address" autocomplete="street-address" required></label>
+      <div class="form__row">
+        <label>State
+          <select name="state" data-state-select>
+            <option value="qld">Queensland</option>
+            <option value="nsw">New South Wales</option>
+          </select>
+        </label>
+        <label>Project type
+          <select name="type">
+            <option>New home</option><option>Extension or renovation</option><option>Subdivision</option><option>Commercial or other</option>
+          </select>
+        </label>
+      </div>
+      <label>Anything else we should know?<textarea name="message" rows="3"></textarea></label>
+      <button class="btn btn--primary" type="submit" data-magnetic><span>Request my quote</span></button>
+      <p class="form__note" role="status" data-form-note></p>
+    </form>
+  </div>
+</section>

@@ -1,0 +1,13 @@
+---
+// Renders [{ h?, p?: string[], list?: string[] }] as readable article blocks.
+const { sections = [] } = Astro.props;
+---
+<div class="prose">
+  {sections.map((s) => (
+    <section data-reveal>
+      {s.h && <h2>{s.h}</h2>}
+      {s.p?.map((t) => <p>{t}</p>)}
+      {s.list && <ul>{s.list.map((t) => <li>{t}</li>)}</ul>}
+    </section>
+  ))}
+</div>

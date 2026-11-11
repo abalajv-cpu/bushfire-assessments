@@ -1,0 +1,20 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import FaqList from '../components/FaqList.astro';
+import { faqs } from '../data/faqs.js';
+const crumbs = [{ label: 'FAQ', href: '/faq/' }];
+const schema = [{
+  '@context': 'https://schema.org', '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+}];
+---
+<Base title="Bushfire Assessment FAQ | BAL Ratings, Reports & Approvals"
+  description="Answers to common questions about BAL ratings, bushfire prone land, bushfire reports and approvals in Queensland and New South Wales."
+  breadcrumbs={crumbs} schema={schema}>
+  <PageHero eyebrow="Common questions" title="Straight answers" breadcrumbs={crumbs}
+    lead="The questions owners, builders and designers ask us most often." />
+  <section class="container block faq">
+    <FaqList items={faqs} />
+  </section>
+</Base>

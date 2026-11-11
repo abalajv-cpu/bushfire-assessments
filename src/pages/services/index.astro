@@ -1,0 +1,24 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import { services } from '../../data/services.js';
+const crumbs = [{ label: 'Services', href: '/services/' }];
+---
+<Base title="Bushfire Assessment Services | BAL & Hazard Reports"
+  description="BAL assessment reports, bushfire hazard reports, planning scheme assessments and bushfire management plans across Queensland and New South Wales."
+  breadcrumbs={crumbs}>
+  <PageHero eyebrow="What we do" title="Bushfire assessment services" breadcrumbs={crumbs}
+    lead="From a BAL rating for a single home to bushfire reporting for a full subdivision, we prepare the assessments councils, certifiers and fire authorities ask for." />
+  <section class="container block">
+    <div class="cards">
+      {services.map((s, i) => (
+        <a class="card" href={`/services/${s.slug}/`} data-card data-reveal>
+          <span class="card__num">{String(i + 1).padStart(2, '0')}</span>
+          <h2 class="h3">{s.name}</h2>
+          <p>{s.short}</p>
+          <span class="card__link">Learn more <i aria-hidden="true">&rarr;</i></span>
+        </a>
+      ))}
+    </div>
+  </section>
+</Base>

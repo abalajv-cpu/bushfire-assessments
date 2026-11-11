@@ -1,0 +1,6 @@
+---
+import ArticleIndex from '../../components/ArticleIndex.astro';
+import { getArticles, categoriesOf } from '../../data/articles.js';
+const articles = await getArticles();
+---
+<ArticleIndex articles={articles} categories={categoriesOf(articles)} />

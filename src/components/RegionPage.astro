@@ -1,0 +1,66 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from './PageHero.astro';
+import FaqList from './FaqList.astro';
+import { states, regionsOf } from '../data/regions.js';
+import { services } from '../data/services.js';
+const { r } = Astro.props;
+const st = states[r.state];
+const crumbs = [{ label: st.name, href: `/${r.state}/` }, { label: r.name, href: `/${r.state}/${r.slug}/` }];
+const nearby = regionsOf(r.state).filter((o) => o.slug !== r.slug);
+const councilText = r.councils.length > 1
+  ? `${r.councils.slice(0, -1).join(', ')} and ${r.councils.at(-1)}`
+  : r.councils[0];
+const title = r.name.length > 22 ? `Bushfire Assessment ${r.name} | ${st.short}` : `Bushfire Assessment ${r.name} | BAL Reports ${st.short}`;
+const desc = `BAL reports and bushfire hazard assessments in ${r.name}, ${st.short}, for ${r.councils[0]}${r.councils.length > 1 ? ' and nearby councils' : ''}. Call 0439 289 234.`;
+const regionFaqs = r.state === 'qld' ? [
+  { q: `How do I know if my ${r.name} property needs a bushfire assessment?`, a: `Check the bushfire hazard overlay in the ${r.councils[0]} planning scheme mapping. If your lot is inside the overlay, a development application or building approval will usually need a bushfire assessment. Send us the address and we can check for you.` },
+  { q: `What standard is a BAL assessment in ${r.name} done to?`, a: 'AS 3959, Construction of buildings in bushfire-prone areas, together with the bushfire overlay code in the local planning scheme and Queensland fire service requirements.' },
+] : [
+  { q: `How do I know if my ${r.name} property is bush fire prone?`, a: `Bush fire prone land is shown on the map held by ${r.councils[0]} and noted on the planning certificate for the property. The NSW Rural Fire Service also has an online lookup tool. Send us the address and we can check for you.` },
+  { q: `What standard is a BAL assessment in ${r.name} done to?`, a: 'Planning for Bush Fire Protection 2019 and AS 3959, Construction of buildings in bushfire-prone areas.' },
+];
+const schema = [
+  { '@context': 'https://schema.org', '@type': 'Service', name: `Bushfire assessment in ${r.name}`, serviceType: 'Bushfire assessment',
+    provider: { '@id': new URL('/#business', Astro.site).href },
+    areaServed: { '@type': 'AdministrativeArea', name: `${r.name}, ${st.name}` } },
+  { '@context': 'https://schema.org', '@type': 'FAQPage',
+    mainEntity: regionFaqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
+];
+---
+<Base title={title} description={desc} state={r.state} breadcrumbs={crumbs} schema={schema}>
+  <PageHero eyebrow={`${st.name} service area`} title={`Bushfire assessments in ${r.name}`} lead={r.intro} breadcrumbs={crumbs} />
+
+  <div class="container split block">
+    <div class="prose">
+      <section data-reveal>
+        <h2>Bushfire risk in {r.name}</h2>
+        <p>{r.local}</p>
+      </section>
+      <section data-reveal>
+        <h2>Local councils we prepare reports for</h2>
+        <p>We prepare BAL assessment reports and bushfire hazard assessments for properties under {councilText}.</p>
+        {r.state === 'qld'
+          ? <p>Reports address the bushfire hazard overlay code in the local planning scheme and are prepared in accordance with AS 3959 and Queensland fire service requirements.</p>
+          : <p>Reports are prepared under Planning for Bush Fire Protection 2019 and AS 3959, for development applications, complying development and referrals to the NSW Rural Fire Service.</p>}
+      </section>
+      <section data-reveal>
+        <h2>What we can help with in {r.name}</h2>
+        <ul>
+          {services.map((s) => <li><a href={`/services/${s.slug}/`}>{s.name}</a>: {s.short}</li>)}
+        </ul>
+      </section>
+    </div>
+    <aside class="aside" data-reveal>
+      <h2 class="aside__title">{st.name}</h2>
+      <a class="aside__link" href={`/${r.state}/`}>How bushfire is regulated in {st.short} <i aria-hidden="true">&rarr;</i></a>
+      <h2 class="aside__title">Other {st.short} areas</h2>
+      {nearby.map((o) => <a class="aside__link" href={`/${r.state}/${o.slug}/`}>{o.name} <i aria-hidden="true">&rarr;</i></a>)}
+    </aside>
+  </div>
+
+  <section class="container block block--tight">
+    <div class="section-head"><p class="eyebrow" data-reveal>Common questions</p><h2 class="h2" data-split>{r.name}: quick answers</h2></div>
+    <FaqList items={regionFaqs} name={`faq-${r.slug}`} />
+  </section>
+</Base>

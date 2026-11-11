@@ -1,0 +1,81 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import { getArticles, readingTime, formatDate, slugify } from '../../data/articles.js';
+import { services } from '../../data/services.js';
+import { site } from '../../data/site.js';
+
+export async function getStaticPaths() {
+  const articles = await getArticles();
+  return articles.map((article) => ({ params: { slug: article.id }, props: { article, articles } }));
+}
+const { article, articles } = Astro.props;
+const { data } = article;
+const { Content, headings } = await render(article);
+const toc = headings.filter((h) => h.depth === 2);
+const catSlug = slugify(data.category);
+const crumbs = [{ label: 'Articles', href: '/blog/' }, { label: data.category, href: `/blog/category/${catSlug}/` }, { label: data.title, href: `/blog/${article.id}/` }];
+// related: same category first, then newest
+const related = articles.filter((a) => a.id !== article.id)
+  .sort((a, b) => (slugify(b.data.category) === catSlug) - (slugify(a.data.category) === catSlug))
+  .slice(0, 3);
+const schema = [{
+  '@context': 'https://schema.org', '@type': 'BlogPosting', headline: data.title, description: data.description,
+  datePublished: data.date.toISOString(), dateModified: (data.updated ?? data.date).toISOString(),
+  articleSection: data.category,
+  image: data.image ? new URL(data.image, Astro.site).href : undefined,
+  author: { '@type': 'Organization', name: data.author },
+  publisher: { '@id': new URL('/#business', Astro.site).href },
+  mainEntityOfPage: new URL(`/blog/${article.id}/`, Astro.site).href,
+}];
+---
+<Base title={data.title.length > 48 ? data.title : `${data.title} | Bushfire Assessments`} description={data.description}
+  breadcrumbs={crumbs} schema={schema} ogType="article">
+
+  <div class="read-progress" aria-hidden="true"><span></span></div>
+
+  <header class="page-hero page-hero--article">
+    <div class="page-hero__glow" aria-hidden="true"></div>
+    <canvas class="page-hero__embers" data-embers aria-hidden="true"></canvas>
+    <div class="container page-hero__inner">
+      <nav class="crumbs" aria-label="Breadcrumb" data-hero-fade>
+        <a href="/">Home</a><a href="/blog/">Articles</a><a href={`/blog/category/${catSlug}/`}>{data.category}</a>
+      </nav>
+      <h1 class="h1" data-split-now>{data.title}</h1>
+      <p class="page-hero__lead" data-hero-fade>{data.description}</p>
+      <p class="article-meta" data-hero-fade>
+        <span>{data.author}</span>
+        <time datetime={data.date.toISOString()}>{formatDate(data.date)}</time>
+        <span>{readingTime(article.body)} min read</span>
+      </p>
+    </div>
+  </header>
+
+  <div class="container split block">
+    <article class="article-body" data-reveal>
+      {data.image && <img class="article-body__cover" src={data.image} alt={data.imageAlt ?? ''} decoding="async">}
+      <Content />
+    </article>
+    <aside class="aside" data-reveal>
+      {toc.length > 1 && (
+        <>
+          <h2 class="aside__title">In this article</h2>
+          {toc.map((h) => <a class="aside__link" href={`#${h.slug}`}>{h.text}</a>)}
+        </>
+      )}
+      <h2 class="aside__title">Need an assessment?</h2>
+      {services.slice(0, 2).map((s) => <a class="aside__link" href={`/services/${s.slug}/`}>{s.name} <i aria-hidden="true">&rarr;</i></a>)}
+      <a class="aside__link" href={site.phoneHref}>Call {site.phone} <i aria-hidden="true">&rarr;</i></a>
+    </aside>
+  </div>
+
+  {related.length > 0 && (
+    <section class="container block block--tight">
+      <div class="section-head"><p class="eyebrow" data-reveal>Keep reading</p><h2 class="h2" data-split>Related articles</h2></div>
+      <div class="article-grid">
+        {related.map((a) => <ArticleCard article={a} heading="h3" />)}
+      </div>
+    </section>
+  )}
+</Base>

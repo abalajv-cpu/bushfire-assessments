@@ -1,0 +1,19 @@
+---
+import { readingTime, formatDate } from '../data/articles.js';
+const { article, featured = false, heading = 'h2' } = Astro.props;
+const { data, id, body } = article;
+const H = heading;
+---
+<a class:list={['article-card', { 'article-card--featured': featured }]} href={`/blog/${id}/`} data-card data-reveal>
+  <div class="article-card__cover">
+    {data.image
+      ? <img src={data.image} alt={data.imageAlt ?? ''} loading="lazy" decoding="async">
+      : <span aria-hidden="true">{data.category}</span>}
+  </div>
+  <div class="article-card__body">
+    <p class="article-card__meta"><span>{data.category}</span><time datetime={data.date.toISOString()}>{formatDate(data.date)}</time><span>{readingTime(body)} min read</span></p>
+    <H class="article-card__title">{data.title}</H>
+    <p class="article-card__desc">{data.description}</p>
+    <span class="card__link">Read article <i aria-hidden="true">&rarr;</i></span>
+  </div>
+</a>

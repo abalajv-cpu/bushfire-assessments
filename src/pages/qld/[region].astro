@@ -1,0 +1,9 @@
+---
+import RegionPage from '../../components/RegionPage.astro';
+import { regionsOf } from '../../data/regions.js';
+export function getStaticPaths() {
+  return regionsOf('qld').map((r) => ({ params: { region: r.slug }, props: { r } }));
+}
+const { r } = Astro.props;
+---
+<RegionPage r={r} />

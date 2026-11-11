@@ -1,0 +1,11 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+---
+<Base title="Page not found | Bushfire Assessments" description="The page you were looking for could not be found." quote={false}>
+  <PageHero eyebrow="404" title="That page has burnt out" cta={false}
+    lead="The page you were looking for does not exist or has moved." />
+  <section class="container block block--tight">
+    <a class="btn btn--primary" href="/" data-magnetic><span>Back to home</span></a>
+  </section>
+</Base>

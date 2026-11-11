@@ -1,0 +1,293 @@
+---
+import Base from '../layouts/Base.astro';
+import FaqList from '../components/FaqList.astro';
+import { regionsOf } from '../data/regions.js';
+import { faqs } from '../data/faqs.js';
+import ArticleCard from '../components/ArticleCard.astro';
+import { getArticles } from '../data/articles.js';
+
+const latest = (await getArticles()).slice(0, 3);
+import fires from '../data/incidents.json';
+const fireCount = fires.incidents.length;
+const fireWarn = fires.incidents.filter((i) => i.level === 'Emergency Warning' || i.level === 'Watch and Act').length;
+
+const faqSchema = {
+  '@context': 'https://schema.org', '@type': 'FAQPage',
+  mainEntity: faqs.slice(0, 4).map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+---
+<Base home
+  title="Bushfire Assessments QLD & NSW | BAL Reports & Planning Advice"
+  description="BAL assessment reports, bushfire hazard reports and planning scheme assessments across Queensland and New South Wales, to AS 3959. Call 0439 289 234."
+  schema={[faqSchema]}>
+<!-- ================= HERO ================= -->
+<section class="hero" id="top">
+  <div class="scene" aria-hidden="true">
+    <div class="scene__sky"></div>
+    <div class="scene__sun layer" style="--shift:38vh"></div>
+
+    <svg class="scene__hills scene__hills--far layer" style="--shift:26vh" viewBox="0 0 1440 320" preserveAspectRatio="none">
+      <path d="M0 210 C160 150 300 130 470 170 C640 210 760 120 940 110 C1120 100 1270 170 1440 140 L1440 320 L0 320Z"/>
+    </svg>
+
+    <svg class="scene__opera layer" style="--shift:20vh" viewBox="0 0 260 110">
+      <path d="M4 104 C10 60 38 26 84 14 C66 44 62 74 66 104Z"/>
+      <path d="M58 104 C62 56 88 22 132 6 C114 40 112 74 118 104Z"/>
+      <path d="M112 104 C116 62 138 34 172 22 C158 50 158 78 162 104Z"/>
+      <path d="M176 104 C178 78 192 58 214 50 C206 68 206 86 210 104Z"/>
+      <path d="M214 104 C216 88 226 76 240 72 C236 82 236 94 238 104Z"/>
+      <rect x="0" y="102" width="260" height="8"/>
+    </svg>
+
+    <svg class="scene__hills scene__hills--mid layer" style="--shift:15vh" viewBox="0 0 1440 320" preserveAspectRatio="none">
+      <path d="M0 250 C200 180 380 240 560 220 C760 198 880 150 1080 190 C1240 222 1340 200 1440 180 L1440 320 L0 320Z"/>
+    </svg>
+
+    <div class="scene__fire layer" style="--shift:10vh"><i></i><i></i><i></i></div>
+
+    <svg class="scene__bird" viewBox="0 0 60 20"><path d="M0 10 Q15 -6 30 8 Q45 -6 60 10 Q45 3 30 15 Q15 3 0 10Z"/></svg>
+
+    <svg class="scene__tree layer" style="--shift:5vh" viewBox="0 0 400 600" preserveAspectRatio="xMidYMax meet">
+      <path d="M176 600 C184 520 196 440 200 360 C202 320 196 290 178 252 L192 244 C206 278 214 300 216 330 C230 290 256 262 292 238 L302 250 C262 276 240 310 234 360 C228 440 224 520 236 600Z"/>
+      <path d="M198 384 C172 342 140 322 98 312 L102 300 C150 306 186 330 208 368Z"/>
+      <path d="M214 300 C212 250 204 210 190 176 L202 170 C220 206 228 250 228 300Z"/>
+      <ellipse cx="150" cy="232" rx="92" ry="34"/><ellipse cx="258" cy="214" rx="104" ry="36"/>
+      <ellipse cx="200" cy="168" rx="112" ry="40"/><ellipse cx="104" cy="296" rx="62" ry="20"/>
+      <ellipse cx="306" cy="250" rx="72" ry="24"/><ellipse cx="88" cy="204" rx="52" ry="18"/>
+      <ellipse cx="324" cy="180" rx="62" ry="20"/><ellipse cx="204" cy="122" rx="74" ry="26"/>
+      <ellipse cx="150" cy="140" rx="46" ry="16"/><ellipse cx="268" cy="146" rx="50" ry="16"/>
+    </svg>
+
+    <svg class="scene__ground" viewBox="0 0 1440 160" preserveAspectRatio="none">
+      <path d="M0 70 C240 30 420 80 700 60 C980 40 1200 90 1440 50 L1440 160 L0 160Z"/>
+    </svg>
+
+    <canvas class="scene__embers" data-embers></canvas>
+    <div class="scene__vignette"></div>
+  </div>
+
+  <div class="hero__content container">
+    <p class="eyebrow hero__eyebrow" data-hero-fade>Bushfire consultants &middot; <span data-qld="Queensland" data-nsw="New South Wales">Queensland</span></p>
+    <h1 class="hero__title">
+      <span class="line"><span>Know your</span></span>
+      <span class="line"><span><em>bushfire risk</em></span></span>
+      <span class="line"><span>before you build.</span></span>
+    </h1>
+    <p class="hero__lead" data-hero-fade>BAL assessments, bushfire hazard reports and management plans for homes, subdivisions and developments across <span data-qld="Queensland" data-nsw="New South Wales">Queensland</span>.</p>
+    <div class="hero__cta" data-hero-fade>
+      <a class="btn btn--primary" href="#quote" data-magnetic><span>Get a quote</span></a>
+      <a class="btn btn--ghost" href="#bal" data-magnetic><span>What is a BAL rating?</span></a>
+    </div>
+  </div>
+
+  <a class="scroll-hint" href="#intro" data-hero-fade aria-label="Scroll to content"><span></span>Scroll</a>
+</section>
+
+<!-- ================= LIVE STRIP ================= -->
+<div class="live-strip">
+  <a class="container" href="/bushfires/">
+    <span class="live-dot" aria-hidden="true"></span>
+    <strong>{fireCount} bushfire and grass fire incidents listed across Australia</strong>
+    <span class="muted">{fireWarn > 0 ? `${fireWarn} at Watch and Act or Emergency Warning` : 'None at Watch and Act or Emergency Warning'}</span>
+    <span class="link-arrow">Current bushfires <i aria-hidden="true">&rarr;</i></span>
+  </a>
+</div>
+
+<!-- ================= MARQUEE ================= -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee__track">
+    <span>BAL Assessments</span><i></i><span>Bushfire Hazard Reports</span><i></i><span>Bushfire Management Plans</span><i></i><span>Development Applications</span><i></i><span>Subdivisions</span><i></i><span>New Homes &amp; Extensions</span><i></i>
+    <span>BAL Assessments</span><i></i><span>Bushfire Hazard Reports</span><i></i><span>Bushfire Management Plans</span><i></i><span>Development Applications</span><i></i><span>Subdivisions</span><i></i><span>New Homes &amp; Extensions</span><i></i>
+  </div>
+</div>
+
+<!-- ================= INTRO STATEMENT ================= -->
+<section class="intro container" id="intro">
+  <p class="eyebrow" data-reveal>Why it matters</p>
+  <p class="intro__text" data-words>Building near bushland means building to a standard. We measure the vegetation, slope and distance around your site, then give you a clear report your council, certifier and builder can act on.</p>
+
+  <ul class="stats">
+    <li data-reveal><strong><span data-countup="2">2</span></strong><span>States serviced: Queensland and New South Wales</span></li>
+    <li data-reveal><strong><span data-countup="6">6</span></strong><span>Bushfire Attack Levels, from BAL-LOW to BAL-FZ</span></li>
+    <li data-reveal><strong><span data-countup="100">100</span><small>m</small></strong><span>Of surrounding vegetation assessed around your site</span></li>
+    <li data-reveal><strong><small>AS</small><span data-countup="3959" data-plain>3959</span></strong><span>The Australian Standard every assessment is made against</span></li>
+  </ul>
+</section>
+
+<!-- ================= BAL SCALE ================= -->
+<section class="bal" id="bal" data-bal>
+  <div class="bal__pin">
+    <div class="container bal__grid">
+      <div class="bal__head">
+        <p class="eyebrow">Bushfire Attack Level</p>
+        <h2 class="h2">Six ratings. One decides how you build.</h2>
+        <p class="muted">Your BAL sets the construction requirements for your home under AS 3959. Scroll or tap a rating to see what each one means.</p>
+      </div>
+
+      <div class="bal__stage" aria-live="polite">
+        <div class="bal__glow" aria-hidden="true"></div>
+        <article class="bal__panel is-active" data-bal-panel style="--c:#6fb35f">
+          <div class="bal__rating"><small>BAL</small>LOW</div>
+          <h3>Very low risk</h3>
+          <p>There is insufficient risk to warrant specific bushfire construction requirements.</p>
+        </article>
+        <article class="bal__panel" data-bal-panel style="--c:#f2c94c">
+          <div class="bal__rating"><small>BAL</small>12.5</div>
+          <h3>Ember attack</h3>
+          <p>Risk of ember attack, with radiant heat up to 12.5 kW/m&sup2;. Ember protection is built into the home.</p>
+        </article>
+        <article class="bal__panel" data-bal-panel style="--c:#f5a623">
+          <div class="bal__rating"><small>BAL</small>19</div>
+          <h3>Embers and burning debris</h3>
+          <p>Increasing ember attack and windborne burning debris, with radiant heat up to 19 kW/m&sup2;.</p>
+        </article>
+        <article class="bal__panel" data-bal-panel style="--c:#f7761c">
+          <div class="bal__rating"><small>BAL</small>29</div>
+          <h3>High radiant heat</h3>
+          <p>Increasing ember attack and burning debris, with radiant heat up to 29 kW/m&sup2;.</p>
+        </article>
+        <article class="bal__panel" data-bal-panel style="--c:#e8421a">
+          <div class="bal__rating"><small>BAL</small>40</div>
+          <h3>Possible flame contact</h3>
+          <p>Much increased ember attack, radiant heat up to 40 kW/m&sup2; and an increased likelihood of exposure to flames.</p>
+        </article>
+        <article class="bal__panel" data-bal-panel style="--c:#c21d22">
+          <div class="bal__rating"><small>BAL</small>FZ</div>
+          <h3>Flame zone</h3>
+          <p>Direct exposure to flames from the fire front, as well as extreme radiant heat and ember attack.</p>
+        </article>
+      </div>
+
+      <div class="bal__scale" role="tablist" aria-label="BAL ratings">
+        <button type="button" role="tab" aria-selected="true" data-bal-tab style="--c:#6fb35f">LOW</button>
+        <button type="button" role="tab" aria-selected="false" data-bal-tab style="--c:#f2c94c">12.5</button>
+        <button type="button" role="tab" aria-selected="false" data-bal-tab style="--c:#f5a623">19</button>
+        <button type="button" role="tab" aria-selected="false" data-bal-tab style="--c:#f7761c">29</button>
+        <button type="button" role="tab" aria-selected="false" data-bal-tab style="--c:#e8421a">40</button>
+        <button type="button" role="tab" aria-selected="false" data-bal-tab style="--c:#c21d22">FZ</button>
+        <span class="bal__progress" aria-hidden="true"><span data-bal-progress></span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SERVICES ================= -->
+<section class="services container" id="services">
+  <div class="section-head">
+    <p class="eyebrow" data-reveal>What we do</p>
+    <h2 class="h2" data-split>Reports that get approvals moving.</h2>
+  </div>
+
+  <div class="cards">
+    <a class="card" href="/services/bal-assessment/" data-card data-reveal>
+      <span class="card__num">01</span>
+      <h3>BAL Assessment</h3>
+      <p>A site-specific Bushfire Attack Level rating for your new home, extension or renovation.</p>
+      <span class="card__link">Learn more <i aria-hidden="true">&rarr;</i></span>
+    </a>
+    <a class="card" href="/services/bushfire-hazard-report/" data-card data-reveal>
+      <span class="card__num">02</span>
+      <h3>Bushfire Hazard Report</h3>
+      <p>A full assessment of bushfire risk and protection measures to support your development application.</p>
+      <span class="card__link">Learn more <i aria-hidden="true">&rarr;</i></span>
+    </a>
+    <a class="card" href="/services/bushfire-management-plan/" data-card data-reveal>
+      <span class="card__num">03</span>
+      <h3>Bushfire Management Plan</h3>
+      <p>Asset protection zones, access, water supply and ongoing vegetation management, set out in one plan.</p>
+      <span class="card__link">Learn more <i aria-hidden="true">&rarr;</i></span>
+    </a>
+    <a class="card" href="/services/subdivision-da-support/" data-card data-reveal>
+      <span class="card__num">04</span>
+      <h3>Subdivision &amp; DA Support</h3>
+      <p>Bushfire advice from concept to lodgement for subdivisions, commercial sites and rural developments.</p>
+      <span class="card__link">Learn more <i aria-hidden="true">&rarr;</i></span>
+    </a>
+  </div>
+</section>
+
+<!-- ================= STATES ================= -->
+<section class="states" id="states">
+  <div class="container section-head">
+    <p class="eyebrow" data-reveal>Two states, two rulebooks</p>
+    <h2 class="h2" data-split>Local knowledge on both sides of the border.</h2>
+  </div>
+
+  <div class="states__panels container">
+    <article class="state-panel" data-state-panel="qld" data-reveal>
+      <img src="/assets/brand/logo-qld.webp" alt="" width="348" height="345" loading="lazy">
+      <h3>Queensland</h3>
+      <p>Assessments against the State Planning Policy bushfire prone area mapping and your local council's bushfire hazard overlay.</p>
+      <ul class="chips">{regionsOf('qld').map((r) => <li><a href={`/qld/${r.slug}/`}>{r.name}</a></li>)}</ul>
+      <a class="btn btn--ghost btn--sm" href="/qld/"><span>Bushfire assessments in Queensland</span></a>
+    </article>
+    <article class="state-panel" data-state-panel="nsw" data-reveal>
+      <img src="/assets/brand/logo-nsw.webp" alt="" width="348" height="344" loading="lazy">
+      <h3>New South Wales</h3>
+      <p>Assessments on bush fire prone land under Planning for Bush Fire Protection 2019, published by the NSW Rural Fire Service.</p>
+      <ul class="chips">{regionsOf('nsw').map((r) => <li><a href={`/nsw/${r.slug}/`}>{r.name}</a></li>)}</ul>
+      <a class="btn btn--ghost btn--sm" href="/nsw/"><span>Bushfire assessments in NSW</span></a>
+    </article>
+  </div>
+</section>
+
+<!-- ================= PROCESS ================= -->
+<section class="process container" id="process">
+  <div class="section-head">
+    <p class="eyebrow" data-reveal>How it works</p>
+    <h2 class="h2" data-split>From enquiry to report in four steps.</h2>
+  </div>
+
+  <ol class="steps" data-steps>
+    <span class="steps__line" aria-hidden="true"><span data-steps-line></span></span>
+    <li class="step" data-step>
+      <span class="step__dot" aria-hidden="true"></span>
+      <span class="step__num">Step 1</span>
+      <h3>Send us your site</h3>
+      <p>Share the property address and any plans you have. We confirm what your council or certifier needs and send a quote.</p>
+    </li>
+    <li class="step" data-step>
+      <span class="step__dot" aria-hidden="true"></span>
+      <span class="step__num">Step 2</span>
+      <h3>Site assessment</h3>
+      <p>We assess vegetation type, slope and separation distances around the building site.</p>
+    </li>
+    <li class="step" data-step>
+      <span class="step__dot" aria-hidden="true"></span>
+      <span class="step__num">Step 3</span>
+      <h3>Your report</h3>
+      <p>You receive a clear written report with your BAL rating and the protection measures that apply.</p>
+    </li>
+    <li class="step" data-step>
+      <span class="step__dot" aria-hidden="true"></span>
+      <span class="step__num">Step 4</span>
+      <h3>Lodge and build</h3>
+      <p>Submit the report with your application. We stay available to answer questions from council, your certifier or your builder.</p>
+    </li>
+  </ol>
+</section>
+
+<!-- ================= LATEST ARTICLES ================= -->
+<section class="latest">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow" data-reveal>Latest articles</p>
+      <h2 class="h2" data-split>Bushfire rules, in plain English.</h2>
+      <a class="btn btn--ghost btn--sm" href="/blog/" data-reveal><span>All articles</span></a>
+    </div>
+    <div class="article-grid">
+      {latest.map((a) => <ArticleCard article={a} heading="h3" />)}
+    </div>
+  </div>
+</section>
+
+<!-- ================= FAQ ================= -->
+<section class="faq container" id="faq">
+  <div class="section-head">
+    <p class="eyebrow" data-reveal>Common questions</p>
+    <h2 class="h2" data-split>Straight answers.</h2>
+  </div>
+  <FaqList items={faqs.slice(0, 4)} />
+  <p class="more" data-reveal><a class="link-arrow" href="/faq/">All questions <i aria-hidden="true">&rarr;</i></a></p>
+</section>
+</Base>

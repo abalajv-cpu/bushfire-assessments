@@ -1,0 +1,35 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+const crumbs = [{ label: 'Process', href: '/process/' }];
+const steps = [
+  { h: 'Send us your site', p: 'Share the property address and any plans you have. We check the bushfire mapping, confirm what your council or certifier needs, and send a quote.' },
+  { h: 'Site assessment', p: 'We assess the vegetation type, the slope of the land under it and the separation distances around the building site, within 100 metres of the proposed building.' },
+  { h: 'Analysis and rating', p: 'The site data is assessed against AS 3959 and the planning requirements of your state to determine the BAL rating and the protection measures that apply.' },
+  { h: 'Your report', p: 'You receive a clear written report with the rating, the reasoning behind it and any options that could improve the outcome.' },
+  { h: 'Lodge and build', p: 'Submit the report with your application. We stay available to answer questions from council, the fire authority, your certifier or your builder.' },
+];
+const schema = [{
+  '@context': 'https://schema.org', '@type': 'HowTo', name: 'How to get a bushfire assessment',
+  step: steps.map((s, i) => ({ '@type': 'HowToStep', position: i + 1, name: s.h, text: s.p })),
+}];
+---
+<Base title="How a Bushfire Assessment Works | Our Process"
+  description="From enquiry to finished report: how a BAL assessment or bushfire hazard report is prepared for your Queensland or New South Wales property."
+  breadcrumbs={crumbs} schema={schema}>
+  <PageHero eyebrow="How it works" title="From enquiry to report" breadcrumbs={crumbs}
+    lead="A bushfire assessment follows the same five steps whether it is for a single home or a subdivision." />
+  <section class="container block">
+    <ol class="steps" data-steps>
+      <li class="steps__line" aria-hidden="true"><span data-steps-line></span></li>
+      {steps.map((s, i) => (
+        <li class="step" data-step>
+          <span class="step__dot" aria-hidden="true"></span>
+          <span class="step__num">Step {i + 1}</span>
+          <h2 class="h3">{s.h}</h2>
+          <p>{s.p}</p>
+        </li>
+      ))}
+    </ol>
+  </section>
+</Base>

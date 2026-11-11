@@ -1,0 +1,49 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Sections from '../../components/Sections.astro';
+import FaqList from '../../components/FaqList.astro';
+import { services } from '../../data/services.js';
+import { regionsOf } from '../../data/regions.js';
+
+export function getStaticPaths() {
+  return services.map((s) => ({ params: { slug: s.slug }, props: { s } }));
+}
+const { s } = Astro.props;
+const crumbs = [{ label: 'Services', href: '/services/' }, { label: s.name, href: `/services/${s.slug}/` }];
+const others = services.filter((o) => o.slug !== s.slug);
+const schema = [
+  { '@context': 'https://schema.org', '@type': 'Service', name: s.title, description: s.metaDesc, serviceType: s.name,
+    provider: { '@id': new URL('/#business', Astro.site).href },
+    areaServed: [{ '@type': 'State', name: 'Queensland' }, { '@type': 'State', name: 'New South Wales' }] },
+  { '@context': 'https://schema.org', '@type': 'FAQPage',
+    mainEntity: s.faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
+];
+---
+<Base title={s.metaTitle} description={s.metaDesc} breadcrumbs={crumbs} schema={schema}>
+  <PageHero eyebrow="Service" title={s.title} lead={s.lead} breadcrumbs={crumbs} />
+
+  <div class="container split block">
+    <Sections sections={s.sections} />
+    <aside class="aside" data-reveal>
+      <h2 class="aside__title">Other services</h2>
+      {others.map((o) => <a class="aside__link" href={`/services/${o.slug}/`}>{o.name} <i aria-hidden="true">&rarr;</i></a>)}
+      <h2 class="aside__title">Where we work</h2>
+      <a class="aside__link" href="/qld/">Queensland <i aria-hidden="true">&rarr;</i></a>
+      <a class="aside__link" href="/nsw/">New South Wales <i aria-hidden="true">&rarr;</i></a>
+    </aside>
+  </div>
+
+  <section class="container block block--tight">
+    <div class="section-head"><p class="eyebrow" data-reveal>Common questions</p><h2 class="h2" data-split>{s.name}: quick answers</h2></div>
+    <FaqList items={s.faqs} name={`faq-${s.slug}`} />
+  </section>
+
+  <section class="container block block--tight">
+    <div class="section-head"><p class="eyebrow" data-reveal>Service areas</p><h2 class="h2" data-split>{s.name} near you</h2></div>
+    <div class="area-cols">
+      <div data-reveal><h3>Queensland</h3><ul class="chips">{regionsOf('qld').map((r) => <li><a href={`/qld/${r.slug}/`}>{r.name}</a></li>)}</ul></div>
+      <div data-reveal><h3>New South Wales</h3><ul class="chips">{regionsOf('nsw').map((r) => <li><a href={`/nsw/${r.slug}/`}>{r.name}</a></li>)}</ul></div>
+    </div>
+  </section>
+</Base>

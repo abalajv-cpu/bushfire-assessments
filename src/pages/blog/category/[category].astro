@@ -1,0 +1,15 @@
+---
+import ArticleIndex from '../../../components/ArticleIndex.astro';
+import { getArticles, categoriesOf, slugify } from '../../../data/articles.js';
+
+export async function getStaticPaths() {
+  const articles = await getArticles();
+  const categories = categoriesOf(articles);
+  return categories.map((c) => ({
+    params: { category: c.slug },
+    props: { active: c, categories, articles: articles.filter((a) => slugify(a.data.category) === c.slug) },
+  }));
+}
+const { active, categories, articles } = Astro.props;
+---
+<ArticleIndex articles={articles} categories={categories} active={active} />

@@ -1,0 +1,151 @@
+---
+import Base from '../layouts/Base.astro';
+import data from '../data/incidents.json';
+
+const { generatedAt, sources, incidents } = data;
+const hotspots = data.hotspots ?? { total: 0, byState: {} };
+const hot = (st) => hotspots.byState?.[st] ?? 0;
+const crumbs = [{ label: 'Current bushfires', href: '/bushfires/' }];
+const TZ = { NSW: 'Australia/Sydney', ACT: 'Australia/Sydney', VIC: 'Australia/Melbourne', QLD: 'Australia/Brisbane', SA: 'Australia/Adelaide', WA: 'Australia/Perth', TAS: 'Australia/Hobart', NT: 'Australia/Darwin' };
+const fmt = (iso, state) => iso ? new Date(iso).toLocaleString('en-AU', { timeZone: TZ[state] ?? 'Australia/Sydney', day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' }) : 'Time not given';
+const asAt = new Date(generatedAt).toLocaleString('en-AU', { timeZone: 'Australia/Sydney', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' });
+const levelClass = (l) => ({ 'Emergency Warning': 'ew', 'Watch and Act': 'wa', Advice: 'adv' }[l] ?? 'none');
+const n = (l) => incidents.filter((i) => i.level === l).length;
+const tiles = [
+  { label: 'Incidents listed', value: incidents.length, cls: 'none' },
+  { label: 'Emergency Warning', value: n('Emergency Warning'), cls: 'ew' },
+  { label: 'Watch and Act', value: n('Watch and Act'), cls: 'wa' },
+  { label: 'Advice', value: n('Advice'), cls: 'adv' },
+];
+const groups = sources.map((s) => ({ ...s, list: incidents.filter((i) => i.state === s.state) }));
+const points = incidents.filter((i) => i.lat && i.lng).map((i) => ({ lat: i.lat, lng: i.lng, name: i.name, state: i.state, level: i.level, status: i.status }));
+const schema = [{
+  '@context': 'https://schema.org', '@type': 'WebPage', name: 'Current bushfires across Australia',
+  url: new URL('/bushfires/', Astro.site).href, dateModified: generatedAt,
+  description: 'Current bushfire and grass fire incidents across Australia, compiled from state fire service feeds.',
+}];
+---
+<Base title="Current Bushfires in Australia | Live Incident List by State"
+  description="Current bushfire and grass fire incidents across Australia, compiled from state fire service data and updated automatically. Not a warning service."
+  breadcrumbs={crumbs} schema={schema}>
+
+  <link slot="head" rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+  <header class="page-hero">
+    <div class="page-hero__glow" aria-hidden="true"></div>
+    <canvas class="page-hero__embers" data-embers aria-hidden="true"></canvas>
+    <div class="container page-hero__inner">
+      <nav class="crumbs" aria-label="Breadcrumb" data-hero-fade><a href="/">Home</a><span aria-current="page">Current bushfires</span></nav>
+      <p class="eyebrow" data-hero-fade><span class="live-dot" aria-hidden="true"></span>Updated automatically</p>
+      <h1 class="h1" data-split-now>Current bushfires across Australia</h1>
+      <p class="page-hero__lead" data-hero-fade>Bushfire and grass fire incidents listed by state fire services. Last updated <time datetime={generatedAt}>{asAt}</time>.</p>
+    </div>
+  </header>
+
+  <section class="container block block--after-hero">
+    <div class="warning-note" role="note">
+      <strong>This page is not a warning service.</strong>
+      <p>Fire conditions change within minutes and this list can be out of date. In an emergency call <a href="tel:000">Triple Zero (000)</a>. For current warnings, always check your state fire service using the links below, and listen to local radio.</p>
+    </div>
+
+    <ul class="fire-tiles">
+      {tiles.map((t) => <li class={`fire-tile fire-tile--${t.cls}`} data-reveal><strong data-countup={t.value}>{t.value}</strong><span>{t.label}</span></li>)}
+    </ul>
+
+    <div class="fire-map" id="fire-map" data-lenis-prevent data-reveal aria-label="Map of current incidents" role="img"></div>
+    <ul class="fire-legend" data-reveal>
+      <li class="lvl lvl--ew">Emergency Warning</li><li class="lvl lvl--wa">Watch and Act</li><li class="lvl lvl--adv">Advice</li><li class="lvl lvl--none">No warning level given</li>
+      {hotspots.total > 0 && <li><label class="lvl lvl--hot fire-toggle"><input type="checkbox" checked data-hotspot-toggle> Satellite hotspots, last 24 hours</label></li>}
+    </ul>
+    {hotspots.total > 0 && (
+      <p class="muted fire-hot-note" data-reveal>
+        Satellites recorded <strong>{hotspots.total.toLocaleString('en-AU')}</strong> fire hotspot detections across Australia in the last 24 hours, shown as the small glowing dots.
+        Hotspots are heat detections, not confirmed bushfires. One fire is usually detected many times, and the count includes planned burns and other heat sources. Data: <a href={hotspots.site} rel="noopener">{hotspots.name}</a>, {hotspots.agency}.
+      </p>
+    )}
+
+    <div class="filter fire-filter" role="group" aria-label="Filter by state" data-reveal>
+      <button type="button" data-fire-filter="all" aria-pressed="true">All</button>
+      {groups.map((g) => <button type="button" data-fire-filter={g.state} aria-pressed="false">{g.state} <small>{g.feed ? g.list.length : '-'}</small></button>)}
+    </div>
+
+    {groups.map((g) => (
+      <section class="fire-state" data-fire-state={g.state}>
+        <header class="fire-state__head" data-reveal>
+          <h2 class="h2">{g.name}</h2>
+          <p class="muted">
+            {g.feed && g.ok && <>{g.list.length} {g.list.length === 1 ? 'incident' : 'incidents'} listed by {g.agency}.</>}
+            {g.feed && !g.ok && <>The {g.agency} feed was unavailable at the last update{g.list.length > 0 && ', so earlier data is shown'}.</>}
+            {!g.feed && <>Incident data is not available for {g.name} on this page.</>}
+            {hot(g.state) > 0 && <> Satellites recorded {hot(g.state).toLocaleString('en-AU')} hotspot detections here in the last 24 hours.</>}
+            {' '}<a class="link-arrow" href={g.site} rel="noopener">Official {g.agency} information <i aria-hidden="true">&rarr;</i></a>
+          </p>
+        </header>
+        {g.list.length > 0 && (
+          <ul class="fire-list">
+            {g.list.map((i) => (
+              <li class="fire-row">
+                <span class={`lvl lvl--${levelClass(i.level)}`}>{i.level ?? 'No warning level'}</span>
+                <div class="fire-row__main">
+                  <h3>{i.name}</h3>
+                  <p>{[i.location !== i.name && i.location, i.area].filter(Boolean).join(' · ')}</p>
+                </div>
+                <dl class="fire-row__meta">
+                  <div><dt>Status</dt><dd>{i.status || 'Not given'}</dd></div>
+                  <div><dt>Type</dt><dd>{i.type}</dd></div>
+                  {i.sizeHa ? <div><dt>Size</dt><dd>{i.sizeHa.toLocaleString('en-AU')} ha</dd></div> : null}
+                  <div><dt>Updated</dt><dd><time datetime={i.updated}>{fmt(i.updated, i.state)}</time></dd></div>
+                </dl>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+    ))}
+
+    <p class="muted fire-sources" data-reveal>Data is compiled automatically from public feeds published by {sources.filter((s) => s.feed).map((s) => s.agency).join(', ')}. Hazard reduction and permitted burns are left out. Incident details belong to the respective agencies. Satellite hotspots are from Digital Earth Australia Hotspots, Geoscience Australia, are not real time and must not be used for safety decisions.</p>
+  </section>
+
+  <script is:inline src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+  <script is:inline define:vars={{ points }}>
+    addEventListener('load', () => {
+      // state filter
+      const buttons = document.querySelectorAll('[data-fire-filter]');
+      buttons.forEach((b) => b.addEventListener('click', () => {
+        const f = b.dataset.fireFilter;
+        buttons.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+        document.querySelectorAll('[data-fire-state]').forEach((s) => { s.hidden = f !== 'all' && s.dataset.fireState !== f; });
+        if (window.ScrollTrigger) ScrollTrigger.refresh();
+      }));
+
+      // map
+      if (!window.L) return;
+      const colors = { 'Emergency Warning': '#e0251b', 'Watch and Act': '#f7861c', Advice: '#f2c94c' };
+      const map = L.map('fire-map', { scrollWheelZoom: false, attributionControl: true }).setView([-27.5, 134], 4);
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 12, className: 'fire-map__tiles',
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      }).addTo(map);
+      // satellite hotspots: grouped into ~10 km cells, drawn on a canvas underneath the incident markers
+      const hotLayer = L.layerGroup().addTo(map);
+      const hotRenderer = L.canvas({ padding: .5 });
+      fetch('/data/hotspots.json').then((r) => (r.ok ? r.json() : null)).then((d) => {
+        if (!d) return;
+        d.cells.forEach(([lat, lng, n, h]) => {
+          L.circleMarker([lat, lng], { renderer: hotRenderer, radius: Math.min(1.5 + Math.sqrt(n) * .35, 6), stroke: false, fillColor: '#ff9a3c', fillOpacity: h <= 6 ? .55 : .3 })
+            .bindPopup(`<strong>${n.toLocaleString('en-AU')} satellite hotspot${n === 1 ? '' : 's'}</strong><br>Most recent about ${h} hour${h === 1 ? '' : 's'} before the last update<br>Not a confirmed bushfire`)
+            .addTo(hotLayer);
+        });
+      }).catch(() => {});
+      document.querySelector('[data-hotspot-toggle]')?.addEventListener('change', (e) => {
+        if (e.target.checked) hotLayer.addTo(map); else map.removeLayer(hotLayer);
+      });
+      const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+      points.slice().reverse().forEach((p) => {
+        L.circleMarker([p.lat, p.lng], { pane: 'markerPane', radius: p.level ? 8 : 5, color: '#141210', weight: 1, fillColor: colors[p.level] || '#b9ad9c', fillOpacity: p.level ? .95 : .7 })
+          .bindPopup(`<strong>${esc(p.name)}</strong><br>${esc(p.state)} · ${esc(p.level || 'No warning level')}<br>${esc(p.status)}`)
+          .addTo(map);
+      });
+    });
+  </script>
+</Base>

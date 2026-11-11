@@ -1,0 +1,37 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from './PageHero.astro';
+import Sections from './Sections.astro';
+import { states, regionsOf } from '../data/regions.js';
+import { services } from '../data/services.js';
+const { code } = Astro.props;
+const st = states[code];
+const list = regionsOf(code);
+const crumbs = [{ label: st.name, href: `/${code}/` }];
+---
+<Base title={st.metaTitle} description={st.metaDesc} state={code} breadcrumbs={crumbs}>
+  <PageHero eyebrow={`Bushfire Assessments ${st.name}`} title={`Bushfire assessments in ${st.name}`} lead={st.lead} breadcrumbs={crumbs} />
+
+  <div class="container split block">
+    <Sections sections={st.framework} />
+    <aside class="aside" data-reveal>
+      <img src={`/assets/brand/logo-${code}.webp`} alt={`Bushfire Assessments ${st.name} logo`} width="348" height="345" loading="lazy">
+      <h2 class="aside__title">Services in {st.short}</h2>
+      {services.map((s) => <a class="aside__link" href={`/services/${s.slug}/`}>{s.name} <i aria-hidden="true">&rarr;</i></a>)}
+    </aside>
+  </div>
+
+  <section class="container block block--tight">
+    <div class="section-head"><p class="eyebrow" data-reveal>Where we work</p><h2 class="h2" data-split>{st.name} regions</h2></div>
+    <div class="region-grid">
+      {list.map((r) => (
+        <a class="region-card" href={`/${code}/${r.slug}/`} data-card data-reveal>
+          <h3>{r.name}</h3>
+          <p>{r.councils.slice(0, 2).join(', ')}{r.councils.length > 2 ? ' and more' : ''}</p>
+          <span class="card__link">View area <i aria-hidden="true">&rarr;</i></span>
+        </a>
+      ))}
+    </div>
+    <p class="muted more" data-reveal>Outside these areas? We assess sites across {st.name}. <a class="link-arrow" href="#quote">Send us the address <i aria-hidden="true">&rarr;</i></a></p>
+  </section>
+</Base>

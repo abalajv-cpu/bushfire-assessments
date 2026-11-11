@@ -1,0 +1,20 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { site } from '../data/site.js';
+const crumbs = [{ label: 'Contact', href: '/contact/' }];
+const schema = [{ '@context': 'https://schema.org', '@type': 'ContactPage', name: 'Contact Bushfire Assessments', url: new URL('/contact/', Astro.site).href }];
+---
+<Base title="Contact Bushfire Assessments | Get a Quote | 0439 289 234"
+  description="Request a quote for a BAL assessment or bushfire report in Queensland or New South Wales. Call 0439 289 234 or send us your property address."
+  breadcrumbs={crumbs} schema={schema}>
+  <PageHero eyebrow="Contact" title="Planning a build, renovation or subdivision?" breadcrumbs={crumbs} cta={false}
+    lead="Get in touch for clear, practical bushfire advice. Call us, email, or send your property details using the form below." />
+  <section class="container block block--tight">
+    <div class="contact-cards">
+      <a class="region-card" href={site.phoneHref} data-card data-reveal><h2 class="h3">Call</h2><p>{site.phone}</p><span class="card__link">Call now <i aria-hidden="true">&rarr;</i></span></a>
+      <a class="region-card" href={`mailto:${site.email}`} data-card data-reveal><h2 class="h3">Email</h2><p>{site.email}</p><span class="card__link">Send an email <i aria-hidden="true">&rarr;</i></span></a>
+      <div class="region-card" data-reveal><h2 class="h3">Office</h2><p>{site.office}<br>Servicing Queensland and New South Wales</p></div>
+    </div>
+  </section>
+</Base>
