@@ -5,8 +5,7 @@ on:
   push:
     branches: [main]
   schedule:
-    - cron: '7,37 * * * *'   # every 30 minutes: refresh the Current Bushfires page
-    - cron: '50 13 * * *'    # once a day (about midnight AEST): also save data and articles to the repository
+    - cron: '7,37 * * * *'   # every 30 minutes (GitHub runs schedules on a best-effort basis and can skip or delay them)
   workflow_dispatch:         # allows a manual run from the Actions tab
 
 permissions:
@@ -16,13 +15,15 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: false
+  cancel-in-progress: true   # a newer run replaces an older one that is still waiting
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # full history, to see when data was last saved
 
       - uses: actions/setup-node@v4
         with:
@@ -42,11 +43,17 @@ jobs:
           SITE_BASE: ${{ steps.pages.outputs.base_path }}
 
       # Past weekly articles only exist if they are saved in the repository.
-      # Done once a day (and on manual runs) to keep the history tidy. This also counts as
-      # repository activity, which stops GitHub pausing the schedule after 60 quiet days.
+      # Saved at most about once a day (on the first scheduled run after 20 hours, or on a manual run)
+      # to keep the history tidy. This also counts as repository activity, which stops GitHub
+      # pausing the schedule after 60 quiet days.
       - name: Save data and weekly article to the repository
-        if: github.event.schedule == '50 13 * * *' || github.event_name == 'workflow_dispatch'
+        if: github.event_name != 'push'
         run: |
+          last=$(git log -1 --format=%ct --grep="Update bushfire data and weekly article" || true)
+          age=$(( $(date +%s) - ${last:-0} ))
+          if [ "$age" -lt 72000 ] && [ "${{ github.event_name }}" != "workflow_dispatch" ]; then
+            echo "Saved $((age / 3600)) hours ago; skipping."; exit 0
+          fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add src/data/incidents.json public/data/hotspots.json public/data/incidents.json src/content/articles/bushfire-update-*.md
