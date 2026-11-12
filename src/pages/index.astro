@@ -17,8 +17,8 @@ const faqSchema = {
 };
 ---
 <Base home
-  title="Bushfire Assessments QLD & NSW | BAL Reports & Planning Advice"
-  description="BAL assessment reports, bushfire hazard reports and planning scheme assessments across Queensland and New South Wales, to AS 3959. Call 0439 289 234."
+  title="Bushfire Assessments QLD, NSW & VIC | BAL Reports & Advice"
+  description="BAL assessment reports, bushfire hazard reports and planning scheme assessments across Queensland, New South Wales and Victoria, to AS 3959. Call 0439 289 234."
   schema={[faqSchema]}>
 <!-- ================= HERO ================= -->
 <section class="hero" id="top">
@@ -67,13 +67,13 @@ const faqSchema = {
   </div>
 
   <div class="hero__content container">
-    <p class="eyebrow hero__eyebrow" data-hero-fade>Bushfire consultants &middot; <span data-qld="Queensland" data-nsw="New South Wales">Queensland</span></p>
+    <p class="eyebrow hero__eyebrow" data-hero-fade>Bushfire consultants &middot; <span data-qld="Queensland" data-nsw="New South Wales" data-vic="Victoria">Queensland</span></p>
     <h1 class="hero__title">
       <span class="line"><span>Know your</span></span>
       <span class="line"><span><em>bushfire risk</em></span></span>
       <span class="line"><span>before you build.</span></span>
     </h1>
-    <p class="hero__lead" data-hero-fade>BAL assessments, bushfire hazard reports and management plans for homes, subdivisions and developments across <span data-qld="Queensland" data-nsw="New South Wales">Queensland</span>.</p>
+    <p class="hero__lead" data-hero-fade>BAL assessments, bushfire hazard reports and management plans for homes, subdivisions and developments across <span data-qld="Queensland" data-nsw="New South Wales" data-vic="Victoria">Queensland</span>.</p>
     <div class="hero__cta" data-hero-fade>
       <a class="btn btn--primary" href="#quote" data-magnetic><span>Get a quote</span></a>
       <a class="btn btn--ghost" href="#bal" data-magnetic><span>What is a BAL rating?</span></a>
@@ -107,7 +107,7 @@ const faqSchema = {
   <p class="intro__text" data-words>Building near bushland means building to a standard. We measure the vegetation, slope and distance around your site, then give you a clear report your council, certifier and builder can act on.</p>
 
   <ul class="stats">
-    <li data-reveal><strong><span data-countup="2">2</span></strong><span>States serviced: Queensland and New South Wales</span></li>
+    <li data-reveal><strong><span data-countup="3">3</span></strong><span>States serviced: Queensland, New South Wales and Victoria</span></li>
     <li data-reveal><strong><span data-countup="6">6</span></strong><span>Bushfire Attack Levels, from BAL-LOW to BAL-FZ</span></li>
     <li data-reveal><strong><span data-countup="100">100</span><small>m</small></strong><span>Of surrounding vegetation assessed around your site</span></li>
     <li data-reveal><strong><small>AS</small><span data-countup="3959" data-plain>3959</span></strong><span>The Australian Standard every assessment is made against</span></li>
@@ -171,6 +171,22 @@ const faqSchema = {
   </div>
 </section>
 
+<!-- ================= PROPERTY CHECK ================= -->
+<section class="pc-promo">
+  <div class="container pc-promo__inner">
+    <div>
+      <p class="eyebrow" data-reveal>Free tool</p>
+      <h2 class="h2" data-split>Is your property bushfire prone?</h2>
+      <p class="muted" data-reveal>Enter an address to see the official bushfire mapping over an aerial view, for Queensland, New South Wales and Victoria.</p>
+    </div>
+    <form class="pc-form" action="/property-check/" method="get" data-reveal>
+      <label class="sr-only" for="pc-home-address">Property address</label>
+      <input id="pc-home-address" name="address" type="text" autocomplete="street-address" placeholder="Enter a property address" required>
+      <button class="btn btn--primary" type="submit" data-magnetic><span>Check property</span></button>
+    </form>
+  </div>
+</section>
+
 <!-- ================= SERVICES ================= -->
 <section class="services container" id="services">
   <div class="section-head">
@@ -209,24 +225,31 @@ const faqSchema = {
 <!-- ================= STATES ================= -->
 <section class="states" id="states">
   <div class="container section-head">
-    <p class="eyebrow" data-reveal>Two states, two rulebooks</p>
-    <h2 class="h2" data-split>Local knowledge on both sides of the border.</h2>
+    <p class="eyebrow" data-reveal>Three states, three rulebooks</p>
+    <h2 class="h2" data-split>Local knowledge in every state we work in.</h2>
   </div>
 
   <div class="states__panels container">
     <article class="state-panel" data-state-panel="qld" data-reveal>
-      <img src="/assets/brand/logo-qld.webp" alt="" width="348" height="345" loading="lazy">
+      <img src="/assets/brand/logo-qld.webp" alt="" width="440" height="436" loading="lazy">
       <h3>Queensland</h3>
       <p>Assessments against the State Planning Policy bushfire prone area mapping and your local council's bushfire hazard overlay.</p>
       <ul class="chips">{regionsOf('qld').map((r) => <li><a href={`/qld/${r.slug}/`}>{r.name}</a></li>)}</ul>
       <a class="btn btn--ghost btn--sm" href="/qld/"><span>Bushfire assessments in Queensland</span></a>
     </article>
     <article class="state-panel" data-state-panel="nsw" data-reveal>
-      <img src="/assets/brand/logo-nsw.webp" alt="" width="348" height="344" loading="lazy">
+      <img src="/assets/brand/logo-nsw.webp" alt="" width="440" height="436" loading="lazy">
       <h3>New South Wales</h3>
       <p>Assessments on bush fire prone land under Planning for Bush Fire Protection 2019, published by the NSW Rural Fire Service.</p>
       <ul class="chips">{regionsOf('nsw').map((r) => <li><a href={`/nsw/${r.slug}/`}>{r.name}</a></li>)}</ul>
       <a class="btn btn--ghost btn--sm" href="/nsw/"><span>Bushfire assessments in NSW</span></a>
+    </article>
+    <article class="state-panel" data-state-panel="vic" data-reveal>
+      <img src="/assets/brand/logo-vic.webp" alt="" width="440" height="436" loading="lazy">
+      <h3>Victoria</h3>
+      <p>BAL assessments in designated Bushfire Prone Areas, and the reports a Bushfire Management Overlay planning permit needs.</p>
+      <ul class="chips">{regionsOf('vic').map((r) => <li><a href={`/vic/${r.slug}/`}>{r.name}</a></li>)}</ul>
+      <a class="btn btn--ghost btn--sm" href="/vic/"><span>Bushfire assessments in Victoria</span></a>
     </article>
   </div>
 </section>

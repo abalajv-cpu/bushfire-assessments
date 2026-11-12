@@ -49,7 +49,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/data/incidents.json public/data/hotspots.json src/content/articles/bushfire-update-*.md
+          git add src/data/incidents.json public/data/hotspots.json public/data/incidents.json src/content/articles/bushfire-update-*.md
           git diff --cached --quiet || git commit -m "Update bushfire data and weekly article"
           git push
 

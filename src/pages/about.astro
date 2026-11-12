@@ -6,11 +6,11 @@ import { site } from '../data/site.js';
 const crumbs = [{ label: 'About', href: '/about/' }];
 const sections = [
   { h: 'Who we are', p: [
-    `Bushfire Assessments Queensland and Bushfire Assessments New South Wales are the residential and development assessment services of ${site.parent.name}, a fire risk planning and design consultancy that works across Australia.`,
-    `Our northern office is in ${site.office}, which puts us close to northern New South Wales and southern Queensland, and we assess sites throughout both states.`,
+    `Bushfire Assessments Queensland, New South Wales and Victoria are the residential and development assessment services of ${site.parent.name}, a fire risk planning and design consultancy that works across Australia.`,
+    `Our northern office is in ${site.office}, which puts us close to northern New South Wales and southern Queensland. Agilus is based in Victoria, and we assess sites throughout all three states.`,
   ] },
   { h: 'What we do', p: [
-    'We provide bushfire assessments in accordance with AS 3959 and the requirements of each state: Queensland fire service requirements and local planning schemes in Queensland, and Planning for Bush Fire Protection 2019 in New South Wales.',
+    'We provide bushfire assessments in accordance with AS 3959 and the requirements of each state: Queensland fire service requirements and local planning schemes in Queensland, Planning for Bush Fire Protection 2019 in New South Wales, and the Bushfire Prone Area and Bushfire Management Overlay provisions in Victoria.',
     'That covers BAL assessment reports for individual homes, planning scheme assessments, and bushfire reporting for subdivisions and larger developments.',
   ] },
   { h: 'Who we work with', list: [
@@ -25,11 +25,11 @@ const sections = [
   ] },
 ];
 ---
-<Base title="About Bushfire Assessments | Queensland & New South Wales"
-  description="Bushfire Assessments Queensland and NSW provide BAL reports and planning assessments in accordance with AS 3959. A service of Agilus, with an office in Tenterfield."
+<Base title="About Bushfire Assessments | QLD, NSW & Victoria"
+  description="Bushfire Assessments Queensland, NSW and Victoria provide BAL reports and planning assessments in accordance with AS 3959. A service of Agilus, with an office in Tenterfield."
   breadcrumbs={crumbs}>
   <PageHero eyebrow="About" title="Clear, practical bushfire advice" breadcrumbs={crumbs}
-    lead="We help owners, builders and designers in Queensland and New South Wales understand their bushfire risk and get the reports their approvals need." />
+    lead="We help owners, builders and designers in Queensland, New South Wales and Victoria understand their bushfire risk and get the reports their approvals need." />
   <div class="container split block">
     <Sections sections={sections} />
     <aside class="aside" data-reveal>

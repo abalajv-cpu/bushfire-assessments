@@ -48,6 +48,36 @@ export const states = {
       ] },
     ],
   },
+  vic: {
+    code: 'vic', name: 'Victoria', short: 'VIC',
+    metaTitle: 'Bushfire Assessments Victoria | BAL Reports & BMO Assessments',
+    metaDesc: 'Bushfire assessments across Victoria: BAL assessments in Bushfire Prone Areas and Bushfire Management Overlay reports, to AS 3959. Call 0439 289 234.',
+    lead: 'Victoria is one of the most bushfire prone places in the world. We prepare BAL assessments for land in a Bushfire Prone Area and the reports a Bushfire Management Overlay planning permit needs.',
+    framework: [
+      { h: 'How bushfire is regulated in Victoria', p: [
+        'Victoria has two separate controls. A Bushfire Prone Area (BPA) is designated under the building regulations: new homes there need a Bushfire Attack Level assessment and must be built to at least BAL-12.5 under AS 3959.',
+        'The Bushfire Management Overlay (BMO) is a planning scheme control over land that may be exposed to extreme bushfire. Building or subdividing inside it usually needs a planning permit, assessed against the bushfire planning provisions of the scheme, with the Country Fire Authority as a referral authority.',
+      ] },
+      { h: 'What triggers an assessment', list: [
+        'Your land is in a designated Bushfire Prone Area and you are building a new home or extending',
+        'Your land is inside the Bushfire Management Overlay and you need a planning permit',
+        'A subdivision or a use such as accommodation, childcare or education in the overlay',
+        'Your building surveyor asks for a BAL assessment before issuing a building permit',
+      ] },
+      { h: 'What a BMO application needs', list: [
+        'A bushfire hazard site assessment of vegetation and slope around the site',
+        'A bushfire hazard landscape assessment of the wider area',
+        'A bushfire management statement showing how the proposal meets the planning provisions',
+        'Defendable space, construction standard, water supply and access set out on a plan',
+      ] },
+      { h: 'The standards we work to', list: [
+        'AS 3959 Construction of buildings in bushfire-prone areas',
+        'Planning scheme Clause 44.06 Bushfire Management Overlay',
+        'Planning scheme Clause 53.02 Bushfire planning',
+        'Planning scheme Clause 13.02 Bushfire',
+      ] },
+    ],
+  },
 };
 
 export const regions = [
@@ -102,6 +132,32 @@ export const regions = [
   { state: 'nsw', slug: 'illawarra-shoalhaven', name: 'Illawarra & Shoalhaven', councils: ['Wollongong City Council', 'Shellharbour City Council', 'Kiama Municipal Council', 'Shoalhaven City Council'],
     intro: 'The Illawarra escarpment runs the length of the region directly behind the suburbs, and the Shoalhaven has coastal villages surrounded by forest. The Shoalhaven was heavily affected in the 2019-20 fire season.',
     local: 'Rebuilds and new homes in villages south of Nowra often sit at the higher end of the BAL scale, so construction detailing and product selection are a large part of the advice.' },
+
+  // ---------------- Victoria ----------------
+  { state: 'vic', slug: 'dandenong-ranges-yarra-valley', name: 'Dandenong Ranges & Yarra Valley', councils: ['Yarra Ranges Council', 'Knox City Council', 'Maroondah City Council'],
+    intro: 'The Dandenong Ranges put tall, dense forest on steep slopes within an hour of central Melbourne. Towns such as Olinda, Sassafras, Belgrave, Emerald and Upwey are almost entirely inside the Bushfire Management Overlay.',
+    local: 'Narrow ridge-top roads and steep forested gullies below houses mean defendable space is often hard to achieve within a lot. Assessments here regularly produce BAL-40 and BAL-FZ ratings, and access for fire trucks is looked at closely.' },
+  { state: 'vic', slug: 'melbourne-north-east', name: "Melbourne's North East", councils: ['Nillumbik Shire Council', 'City of Whittlesea', 'Manningham City Council'],
+    intro: 'Eltham, Warrandyte, Research, St Andrews and Kinglake West sit in dry forest and woodland on the edge of the city. The area was heavily affected on Black Saturday in 2009.',
+    local: 'Warrandyte and North Warrandyte combine river valley, steep slopes and limited road access. Much of Nillumbik is inside the overlay, so most new homes need a planning permit as well as a BAL assessment.' },
+  { state: 'vic', slug: 'macedon-ranges', name: 'Macedon Ranges', councils: ['Macedon Ranges Shire Council', 'Hepburn Shire Council'],
+    intro: 'Mount Macedon, Macedon, Woodend, Gisborne and Riddells Creek surround the forested Macedon Range, which burnt on Ash Wednesday in 1983.',
+    local: 'Large lots with mature gardens are common, and deciding how much of the garden counts as managed vegetation can change a rating. Rural living subdivisions on the grassland fringe are assessed for grassfire as well as forest fire.' },
+  { state: 'vic', slug: 'mornington-peninsula', name: 'Mornington Peninsula', councils: ['Mornington Peninsula Shire Council'],
+    intro: 'Arthurs Seat, Red Hill, Main Ridge and the coastal scrub from Rye to Portsea put a large part of the peninsula in a Bushfire Prone Area, with the Bushfire Management Overlay over the forested hinterland and coastal reserves.',
+    local: 'Coastal tea-tree scrub is classified differently from forest and burns quickly. Holiday homes being rebuilt or extended are a large share of the work.' },
+  { state: 'vic', slug: 'surf-coast-otways', name: 'Surf Coast & Otways', councils: ['Surf Coast Shire Council', 'Colac Otway Shire Council'],
+    intro: 'The Great Ocean Road towns of Anglesea, Aireys Inlet, Lorne, Wye River and Apollo Bay sit between the Otway forest and the sea. The area burnt on Ash Wednesday in 1983 and again at Wye River in 2015.',
+    local: 'Steep blocks, forest on the uphill side and a single coastal road are the norm. Ratings at the top of the scale are common, and replacement dwellings are a frequent application type.' },
+  { state: 'vic', slug: 'gippsland', name: 'Gippsland', councils: ['Baw Baw Shire Council', 'Latrobe City Council', 'Wellington Shire Council', 'East Gippsland Shire Council'],
+    intro: 'From the forested foothills of West Gippsland to Mallacoota in the far east, Gippsland has long interfaces between towns and state forest. East Gippsland was heavily affected in the 2019-20 fire season.',
+    local: 'Rural dwellings, farm subdivisions and tourist accommodation make up most of the work. Static water supply and vehicle access for fire appliances are standard requirements on rural lots.' },
+  { state: 'vic', slug: 'ballarat-central-highlands', name: 'Ballarat & Central Highlands', councils: ['City of Ballarat', 'Moorabool Shire Council', 'Hepburn Shire Council'],
+    intro: 'Ballarat, Daylesford, Creswick, Trentham and the Wombat State Forest country mix forest, plantation and open grassland around growing towns.',
+    local: 'Growth areas on the edge of Ballarat are often in a Bushfire Prone Area because of surrounding grassland, where the BAL depends on how far the building is from unmanaged grass.' },
+  { state: 'vic', slug: 'north-east-alpine', name: 'North East & Alpine', councils: ['Alpine Shire Council', 'Indigo Shire Council', 'Mansfield Shire Council', 'Murrindindi Shire Council', 'Rural City of Wangaratta'],
+    intro: 'Bright, Beechworth, Mansfield, Marysville and the alpine valleys are surrounded by mountain forest. Marysville and Kinglake were devastated on Black Saturday in 2009.',
+    local: 'Valley towns with one road out and forest on steep slopes above them need careful attention to access and defendable space. Accommodation proposals are assessed more strictly than a single dwelling.' },
 ];
 
 export const regionsOf = (state) => regions.filter((r) => r.state === state);

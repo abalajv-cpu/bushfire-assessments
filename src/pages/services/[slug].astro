@@ -15,7 +15,7 @@ const others = services.filter((o) => o.slug !== s.slug);
 const schema = [
   { '@context': 'https://schema.org', '@type': 'Service', name: s.title, description: s.metaDesc, serviceType: s.name,
     provider: { '@id': new URL('/#business', Astro.site).href },
-    areaServed: [{ '@type': 'State', name: 'Queensland' }, { '@type': 'State', name: 'New South Wales' }] },
+    areaServed: [{ '@type': 'State', name: 'Queensland' }, { '@type': 'State', name: 'New South Wales' }, { '@type': 'State', name: 'Victoria' }] },
   { '@context': 'https://schema.org', '@type': 'FAQPage',
     mainEntity: s.faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
 ];
@@ -31,6 +31,7 @@ const schema = [
       <h2 class="aside__title">Where we work</h2>
       <a class="aside__link" href="/qld/">Queensland <i aria-hidden="true">&rarr;</i></a>
       <a class="aside__link" href="/nsw/">New South Wales <i aria-hidden="true">&rarr;</i></a>
+      <a class="aside__link" href="/vic/">Victoria <i aria-hidden="true">&rarr;</i></a>
     </aside>
   </div>
 
@@ -44,6 +45,7 @@ const schema = [
     <div class="area-cols">
       <div data-reveal><h3>Queensland</h3><ul class="chips">{regionsOf('qld').map((r) => <li><a href={`/qld/${r.slug}/`}>{r.name}</a></li>)}</ul></div>
       <div data-reveal><h3>New South Wales</h3><ul class="chips">{regionsOf('nsw').map((r) => <li><a href={`/nsw/${r.slug}/`}>{r.name}</a></li>)}</ul></div>
+      <div data-reveal><h3>Victoria</h3><ul class="chips">{regionsOf('vic').map((r) => <li><a href={`/vic/${r.slug}/`}>{r.name}</a></li>)}</ul></div>
     </div>
   </section>
 </Base>

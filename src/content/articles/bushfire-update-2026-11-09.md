@@ -1,15 +1,15 @@
 ---
 title: "Bushfire update: week of 9 November 2026"
-description: "Current bushfires across Australia as at 11 November 2026: 137 incidents listed by state fire services, with 0 at Emergency Warning and 0 at Watch and Act."
+description: "Current bushfires across Australia as at 12 November 2026: 127 incidents listed by state fire services, with 0 at Emergency Warning and 1 at Watch and Act."
 date: 2026-11-09
-updated: 2026-11-11T02:42:49.984Z
+updated: 2026-11-12T01:37:28.133Z
 category: "Bushfire updates"
 draft: false
 ---
 
-As at Wednesday 11 November 2026 at 1:42 pm AEDT, state fire services were listing **137 bushfire and grass fire incidents** across New South Wales, Queensland, Victoria, Western Australia and Australian Capital Territory.
+As at Thursday 12 November 2026 at 12:37 pm AEDT, state fire services were listing **127 bushfire and grass fire incidents** across New South Wales, Queensland, Victoria, Western Australia and Australian Capital Territory.
 
-Of those, **0** were at Emergency Warning, **0** at Watch and Act and **21** at Advice.
+Of those, **0** were at Emergency Warning, **1** at Watch and Act and **27** at Advice.
 
 > This is an automated summary of public fire service data and can be out of date within minutes. It is not a warning service. In an emergency call Triple Zero (000), and always check your state fire service for current warnings.
 
@@ -17,18 +17,18 @@ See the [live current bushfires page](/bushfires/) for the latest list.
 
 ## New South Wales
 
-NSW Rural Fire Service was listing 33 incidents, including 18 at Advice.
+NSW Rural Fire Service was listing 34 incidents, including 1 at Watch and Act, 23 at Advice.
 
 | Incident | Alert level | Status | Size |
 | --- | --- | --- | --- |
-| West St, South Kempsey (Kempsey) | Advice | Not yet controlled | - |
-| Cranky Corner Rd S, Stanhope (Singleton) | Advice | Under control | - |
-| Ballimore Rd, Ballimore (Dubbo Regional) | Advice | Being controlled | 69 ha |
-| Glenroy Rd, Stuart Town (Dubbo Regional) | Advice | Under control | - |
-| Greens Lane, Milvale (Cootamundra-Gundagai) | Advice | Under control | 2 ha |
-| Bruces Lane, Memagong (Hilltops) | Advice | Under control | 2 ha |
+| Sand Track (Mid-Coast) | Watch and Act | Not yet controlled | 865 ha |
+| Wollombi Rd, Broke (Singleton) | Advice | Being controlled | - |
+| Bruie Plains Rd, Bruie Plains (Parkes) | Advice | Not yet controlled | 332 ha |
+| Wambo Ridge (Singleton) | Advice | Not yet controlled | 1 ha |
+| Ross Rixon Road Dampier (Eurobodalla) | Advice | Not yet controlled | - |
 | Burraway Rd, Terramungamine (Dubbo Regional) | Advice | Under control | 1 ha |
-| Cathundral Rd, Trangie (Narromine) | Advice | Under control | - |
+| Benolong Rd, Toongi (Dubbo Regional) | Advice | Under control | 26 ha |
+| Bocoble Rd, Queens Pinch (Mid-Western) | Advice | Under control | 1 ha |
 
 Incidents at a warning level are shown. Source: [NSW Rural Fire Service](https://www.rfs.nsw.gov.au/fire-information/fires-near-me).
 
@@ -39,42 +39,35 @@ Queensland Fire Department was listing 41 incidents, including 3 at Advice.
 | Incident | Alert level | Status | Size |
 | --- | --- | --- | --- |
 | Cloncurry and surrounding areas | Advice | Stay Informed | - |
-| Goomburra Valley and surrounding areas | Advice | Avoid Smoke | - |
+| Innot Hot Springs and surrounding areas | Advice | Avoid Smoke | - |
 | Hope Vale | Advice | Avoid Smoke | - |
 
 Incidents at a warning level are shown. Source: [Queensland Fire Department](https://www.fire.qld.gov.au/Current-Incidents).
 
 ## Victoria
 
-VicEmergency was listing 11 incidents, none at a warning level.
+VicEmergency was listing 5 incidents, including 1 at Advice.
 
 | Incident | Alert level | Status | Size |
 | --- | --- | --- | --- |
-| Cannie - Ellis Rd | - | Under Control | 50 ha |
-| Whroo Ncr - Gum Flat Rd | - | Under Control | 8.18 ha |
-| Myamyn - Savins Rd | - | Under Control | 1 ha |
-| Mt Dissapointment St - Main Mt Rd Trail Bike Car Park | - | Under Control | 0.1 ha |
-| Glenaladale - Merrijig - Roaring Mag Track | - | Under Control | 0.01 ha |
-| Cowangie | - | Responding | - |
-| Reedy Lake Rd | - | Safe | - |
-| Burge Lane | - | Responding | - |
+| Advice | Advice | Minor | - |
 
-The largest listed incidents are shown. Source: [VicEmergency](https://emergency.vic.gov.au/respond/).
+Incidents at a warning level are shown. Source: [VicEmergency](https://emergency.vic.gov.au/respond/).
 
 ## Western Australia
 
-Emergency WA was listing 52 incidents, none at a warning level.
+Emergency WA was listing 47 incidents, none at a warning level.
 
 | Incident | Alert level | Status | Size |
 | --- | --- | --- | --- |
-| Darling Downs (Shire Of Serpentine-Jarrahdale) | - | On scene | - |
-| Mokine (Shire Of Northam) | - | On scene | - |
-| Mount Hardman (Shire Of Derby/West Kimberley) | - | Monitoring | - |
-| Waterbank (Shire Of Broome) | - | Monitoring | - |
-| Dampier Peninsula (Shire Of Broome) | - | Monitoring | - |
-| Cambridge Gulf (Shire Of Wyndham-East Kimberley) | - | Monitoring | - |
+| Mokine (Shire Of Northam) | - | Monitoring | - |
+| Coolcalalaya (Shire Of Northampton) | - | Monitoring | - |
+| Drysdale River (Shire Of Wyndham-East Kimberley) | - | Monitoring | - |
 | Tutunup (City Of Busselton) | - | Monitoring | - |
-| Oombulgurri (Shire Of Wyndham-East Kimberley) | - | Monitoring | - |
+| Erskine (City Of Mandurah) | - | Monitoring | - |
+| Fortescue (Shire Of Ashburton) | - | Monitoring | - |
+| Millstream (Shire Of Ashburton) | - | Monitoring | - |
+| Bularl Di Wunami (Shire Of Derby/West Kimberley) | - | Monitoring | - |
 
 The largest listed incidents are shown. Source: [Emergency WA](https://www.emergency.wa.gov.au/).
 
@@ -84,17 +77,17 @@ ACT Emergency Services Agency was not listing any bushfire or grass fire inciden
 
 ## Satellite hotspots
 
-Satellites recorded **60,064 fire hotspot detections** across Australia in the 24 hours before this update. Hotspots are heat detections, not confirmed bushfires. One fire is usually detected many times, and the count includes planned burns and other heat sources. They are the only data shown here for states without an incident feed.
+Satellites recorded **52,253 fire hotspot detections** across Australia in the 24 hours before this update. Hotspots are heat detections, not confirmed bushfires. One fire is usually detected many times, and the count includes planned burns and other heat sources. They are the only data shown here for states without an incident feed.
 
 | State or territory | Hotspots in 24 hours |
 | --- | --- |
-| New South Wales | 873 |
-| Queensland | 25,942 |
-| Victoria | 144 |
-| Western Australia | 21,417 |
-| South Australia | 166 |
-| Tasmania | 18 |
-| Northern Territory | 11,504 |
+| New South Wales | 826 |
+| Queensland | 27,644 |
+| Victoria | 189 |
+| Western Australia | 11,519 |
+| South Australia | 627 |
+| Tasmania | 95 |
+| Northern Territory | 11,353 |
 
 Source: [Digital Earth Australia Hotspots](https://hotspots.dea.ga.gov.au/), Geoscience Australia. Hotspot data is not real time and must not be used for safety decisions.
 

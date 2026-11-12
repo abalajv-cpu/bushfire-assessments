@@ -13,13 +13,26 @@ const councilText = r.councils.length > 1
   : r.councils[0];
 const title = r.name.length > 22 ? `Bushfire Assessment ${r.name} | ${st.short}` : `Bushfire Assessment ${r.name} | BAL Reports ${st.short}`;
 const desc = `BAL reports and bushfire hazard assessments in ${r.name}, ${st.short}, for ${r.councils[0]}${r.councils.length > 1 ? ' and nearby councils' : ''}. Call 0439 289 234.`;
-const regionFaqs = r.state === 'qld' ? [
-  { q: `How do I know if my ${r.name} property needs a bushfire assessment?`, a: `Check the bushfire hazard overlay in the ${r.councils[0]} planning scheme mapping. If your lot is inside the overlay, a development application or building approval will usually need a bushfire assessment. Send us the address and we can check for you.` },
-  { q: `What standard is a BAL assessment in ${r.name} done to?`, a: 'AS 3959, Construction of buildings in bushfire-prone areas, together with the bushfire overlay code in the local planning scheme and Queensland fire service requirements.' },
-] : [
-  { q: `How do I know if my ${r.name} property is bush fire prone?`, a: `Bush fire prone land is shown on the map held by ${r.councils[0]} and noted on the planning certificate for the property. The NSW Rural Fire Service also has an online lookup tool. Send us the address and we can check for you.` },
-  { q: `What standard is a BAL assessment in ${r.name} done to?`, a: 'Planning for Bush Fire Protection 2019 and AS 3959, Construction of buildings in bushfire-prone areas.' },
-];
+const FAQS = {
+  qld: [
+    { q: `How do I know if my ${r.name} property needs a bushfire assessment?`, a: `Check the bushfire hazard overlay in the ${r.councils[0]} planning scheme mapping. If your lot is inside the overlay, a development application or building approval will usually need a bushfire assessment. Our property check tool shows the state mapping for any address.` },
+    { q: `What standard is a BAL assessment in ${r.name} done to?`, a: 'AS 3959, Construction of buildings in bushfire-prone areas, together with the bushfire overlay code in the local planning scheme and Queensland fire service requirements.' },
+  ],
+  nsw: [
+    { q: `How do I know if my ${r.name} property is bush fire prone?`, a: `Bush fire prone land is shown on the map held by ${r.councils[0]} and noted on the planning certificate for the property. Our property check tool shows the statewide map for any address.` },
+    { q: `What standard is a BAL assessment in ${r.name} done to?`, a: 'Planning for Bush Fire Protection 2019 and AS 3959, Construction of buildings in bushfire-prone areas.' },
+  ],
+  vic: [
+    { q: `How do I know if my ${r.name} property is in a Bushfire Prone Area or the BMO?`, a: 'Both are shown on a planning property report and on VicPlan. Our property check tool shows the Bushfire Prone Area and Bushfire Management Overlay for any address.' },
+    { q: `What standard is a BAL assessment in ${r.name} done to?`, a: 'AS 3959, Construction of buildings in bushfire-prone areas. Inside the Bushfire Management Overlay the planning scheme provisions at Clause 44.06 and Clause 53.02 also apply.' },
+  ],
+};
+const regionFaqs = FAQS[r.state];
+const FRAMEWORK = {
+  qld: 'Reports address the bushfire hazard overlay code in the local planning scheme and are prepared in accordance with AS 3959 and Queensland fire service requirements.',
+  nsw: 'Reports are prepared under Planning for Bush Fire Protection 2019 and AS 3959, for development applications, complying development and referrals to the NSW Rural Fire Service.',
+  vic: 'BAL assessments are prepared to AS 3959 for building permits in a Bushfire Prone Area. For land in the Bushfire Management Overlay we prepare the bushfire hazard site assessment, landscape assessment and bushfire management statement a planning permit application needs.',
+};
 const schema = [
   { '@context': 'https://schema.org', '@type': 'Service', name: `Bushfire assessment in ${r.name}`, serviceType: 'Bushfire assessment',
     provider: { '@id': new URL('/#business', Astro.site).href },
@@ -40,9 +53,7 @@ const schema = [
       <section data-reveal>
         <h2>Local councils we prepare reports for</h2>
         <p>We prepare BAL assessment reports and bushfire hazard assessments for properties under {councilText}.</p>
-        {r.state === 'qld'
-          ? <p>Reports address the bushfire hazard overlay code in the local planning scheme and are prepared in accordance with AS 3959 and Queensland fire service requirements.</p>
-          : <p>Reports are prepared under Planning for Bush Fire Protection 2019 and AS 3959, for development applications, complying development and referrals to the NSW Rural Fire Service.</p>}
+        <p>{FRAMEWORK[r.state]}</p>
       </section>
       <section data-reveal>
         <h2>What we can help with in {r.name}</h2>

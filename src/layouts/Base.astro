@@ -31,6 +31,7 @@ const orgSchema = {
   areaServed: [
     { '@type': 'State', name: 'Queensland' },
     { '@type': 'State', name: 'New South Wales' },
+    { '@type': 'State', name: 'Victoria' },
   ],
   parentOrganization: { '@type': 'Organization', name: site.parent.name, url: site.parent.url },
   sameAs: [site.social.qld, site.social.nsw],
@@ -74,7 +75,7 @@ const allSchema = [orgSchema, crumbSchema, ...schema].filter(Boolean);
     try {
       var f = d.dataset.force;
       if (f) localStorage.setItem('bfa-state', f);
-      else { var s = localStorage.getItem('bfa-state'); if (s === 'nsw' || s === 'qld') d.dataset.state = s; }
+      else { var s = localStorage.getItem('bfa-state'); if (s === 'nsw' || s === 'qld' || s === 'vic') d.dataset.state = s; }
     } catch (e) {}
   })();
 </script>
@@ -85,7 +86,7 @@ const allSchema = [orgSchema, crumbSchema, ...schema].filter(Boolean);
 {home && (
   <div class="preloader" aria-hidden="true">
     <div class="preloader__inner">
-      <img src="/assets/brand/logo-qld.webp" alt="" width="348" height="345" class="preloader__logo">
+      <img src="/assets/brand/logo-qld.webp" alt="" width="440" height="436" class="preloader__logo">
       <div class="preloader__bar"><span></span></div>
       <div class="preloader__count"><span data-count>0</span>%</div>
     </div>
@@ -96,12 +97,13 @@ const allSchema = [orgSchema, crumbSchema, ...schema].filter(Boolean);
 
 <header class="header" data-header>
   <a class="brand" href="/" aria-label={`${site.name} home`}>
-    <img class="brand__logo brand__logo--qld" src="/assets/brand/logo-qld.webp" alt={site.brands.qld} width="348" height="345">
-    <img class="brand__logo brand__logo--nsw" src="/assets/brand/logo-nsw.webp" alt={site.brands.nsw} width="348" height="344">
+    <img class="brand__logo brand__logo--qld" src="/assets/brand/logo-qld.webp" alt={site.brands.qld} width="440" height="436">
+    <img class="brand__logo brand__logo--nsw" src="/assets/brand/logo-nsw.webp" alt={site.brands.nsw} width="440" height="436">
+    <img class="brand__logo brand__logo--vic" src="/assets/brand/logo-vic.webp" alt={site.brands.vic} width="440" height="436">
   </a>
 
   <nav class="nav" id="nav" aria-label="Main">
-    {nav.map((n) => <a href={n.href} aria-current={path.startsWith(n.href) ? 'page' : undefined}>{n.live && <span class="live-dot" aria-hidden="true"></span>}{n.label}</a>)}
+    {nav.map((n) => <a href={n.href} title={n.title} aria-current={path.startsWith(n.href) ? 'page' : undefined}>{n.live && <span class="live-dot" aria-hidden="true"></span>}{n.label}</a>)}
   </nav>
 
   <div class="header__actions">
@@ -109,6 +111,7 @@ const allSchema = [orgSchema, crumbSchema, ...schema].filter(Boolean);
       <div class="state-toggle" role="group" aria-label="Choose your state">
         <button type="button" data-set-state="qld" aria-pressed="true">QLD</button>
         <button type="button" data-set-state="nsw" aria-pressed="false">NSW</button>
+        <button type="button" data-set-state="vic" aria-pressed="false">VIC</button>
         <span class="state-toggle__pill" aria-hidden="true"></span>
       </div>
     )}
@@ -129,10 +132,11 @@ const allSchema = [orgSchema, crumbSchema, ...schema].filter(Boolean);
   <div class="container footer__grid">
     <div class="footer__brand">
       <div class="brand brand--footer">
-        <img class="brand__logo brand__logo--qld" src="/assets/brand/logo-qld.webp" alt={site.brands.qld} width="348" height="345" loading="lazy">
-        <img class="brand__logo brand__logo--nsw" src="/assets/brand/logo-nsw.webp" alt={site.brands.nsw} width="348" height="344" loading="lazy">
+        <img class="brand__logo brand__logo--qld" src="/assets/brand/logo-qld.webp" alt={site.brands.qld} width="440" height="436" loading="lazy">
+        <img class="brand__logo brand__logo--nsw" src="/assets/brand/logo-nsw.webp" alt={site.brands.nsw} width="440" height="436" loading="lazy">
+        <img class="brand__logo brand__logo--vic" src="/assets/brand/logo-vic.webp" alt={site.brands.vic} width="440" height="436" loading="lazy">
       </div>
-      <p class="muted">Bushfire assessments across Queensland and New South Wales. A service of <a href={site.parent.url} rel="noopener">{site.parent.name}</a>.</p>
+      <p class="muted">Bushfire assessments across Queensland, New South Wales and Victoria. A service of <a href={site.parent.url} rel="noopener">{site.parent.name}</a>.</p>
       <p><a class="footer__phone" href={site.phoneHref}>{site.phone}</a><br><a href={`mailto:${site.email}`}>{site.email}</a></p>
     </div>
     <nav aria-label="Services">
@@ -143,6 +147,8 @@ const allSchema = [orgSchema, crumbSchema, ...schema].filter(Boolean);
       <h2>Areas</h2>
       <a href="/qld/">Queensland</a>
       <a href="/nsw/">New South Wales</a>
+      <a href="/vic/">Victoria</a>
+      <a href="/property-check/">Property check</a>
       <a href={site.social.qld} rel="noopener">Facebook (QLD)</a>
       <a href={site.social.nsw} rel="noopener">Facebook (NSW)</a>
     </nav>
@@ -157,7 +163,7 @@ const allSchema = [orgSchema, crumbSchema, ...schema].filter(Boolean);
     </nav>
   </div>
   <div class="footer__word" aria-hidden="true">Bushfire Assessments</div>
-  <div class="container footer__bottom"><span>&copy; {new Date().getFullYear()} {site.name}</span><span>Queensland &middot; New South Wales</span></div>
+  <div class="container footer__bottom"><span>&copy; {new Date().getFullYear()} {site.name}</span><span>Queensland &middot; New South Wales &middot; Victoria</span></div>
 </footer>
 
 <button class="motion-btn" type="button" data-motion-btn aria-pressed="false">Pause motion</button>

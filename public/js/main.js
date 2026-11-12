@@ -12,7 +12,7 @@
   function setState(state, save = true) {
     root.dataset.state = state;
     $$('[data-set-state]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.setState === state)));
-    $$('[data-qld]').forEach(el => { el.textContent = el.dataset[state]; });
+    $$('[data-qld]').forEach(el => { el.textContent = el.dataset[state] ?? el.dataset.qld; });
     const sel = $('[data-state-select]'); if (sel) sel.value = state;
     if (save) { try { localStorage.setItem('bfa-state', state); } catch (e) {} }
   }

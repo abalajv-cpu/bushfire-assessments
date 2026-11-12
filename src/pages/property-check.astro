@@ -1,0 +1,272 @@
+---
+import Base from '../layouts/Base.astro';
+const crumbs = [{ label: 'Property check', href: '/property-check/' }];
+const schema = [{
+  '@context': 'https://schema.org', '@type': 'WebApplication', name: 'Bushfire property check',
+  url: new URL('/property-check/', Astro.site).href, applicationCategory: 'UtilitiesApplication', operatingSystem: 'Any',
+  description: 'Check whether a Queensland, New South Wales or Victorian property is inside mapped bushfire prone land, on an aerial map.',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'AUD' },
+}];
+---
+<Base title="Bushfire Property Check | Is My Land Bushfire Prone?"
+  description="Enter an address to see official bushfire prone area mapping over an aerial view, for Queensland, New South Wales and Victoria. Free and indicative only."
+  breadcrumbs={crumbs} schema={schema}>
+
+  <link slot="head" rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
+
+  <header class="page-hero">
+    <div class="page-hero__glow" aria-hidden="true"></div>
+    <canvas class="page-hero__embers" data-embers aria-hidden="true"></canvas>
+    <div class="container page-hero__inner">
+      <nav class="crumbs" aria-label="Breadcrumb" data-hero-fade><a href="/">Home</a><span aria-current="page">Property check</span></nav>
+      <p class="eyebrow" data-hero-fade>Free tool</p>
+      <h1 class="h1" data-split-now>Is your property bushfire prone?</h1>
+      <p class="page-hero__lead" data-hero-fade>Enter an address in Queensland, New South Wales or Victoria to see the official bushfire mapping over an aerial view.</p>
+      <form class="pc-form" data-pc-form data-hero-fade>
+        <label class="sr-only" for="pc-address">Property address</label>
+        <input id="pc-address" name="address" type="text" autocomplete="street-address" placeholder="e.g. 12 Main Western Road, Tamborine Mountain QLD" required>
+        <button class="btn btn--primary" type="submit"><span>Check property</span></button>
+      </form>
+      <p class="pc-status" role="status" data-pc-status data-hero-fade>Your address is sent to OpenStreetMap to find its location. Nothing is stored by this site.</p>
+    </div>
+  </header>
+
+  <section class="container block block--after-hero pc" data-pc hidden>
+    <div class="pc-layout">
+      <div class="pc-mapwrap">
+        <div class="pc-map" id="pc-map" data-lenis-prevent aria-label="Aerial map with bushfire mapping" role="img"></div>
+        <ul class="fire-legend pc-legend" data-pc-legend></ul>
+        <p class="muted pc-hint">Pin in the wrong spot? Click the map to move it to the exact building site.</p>
+      </div>
+
+      <div class="pc-results">
+        <div class="pc-verdict" data-pc-verdict>
+          <p class="pc-verdict__label" data-pc-label></p>
+          <h2 class="pc-verdict__title" data-pc-title></h2>
+          <p class="pc-verdict__text" data-pc-text></p>
+        </div>
+
+        <dl class="pc-list" data-pc-list></dl>
+
+        <div class="pc-next">
+          <h3>What this means</h3>
+          <p data-pc-meaning></p>
+          <a class="btn btn--primary" href="#quote" data-magnetic><span>Get a site-specific assessment</span></a>
+        </div>
+
+        <div class="pc-nearby">
+          <h3>Current fires nearby</h3>
+          <p class="muted" data-pc-nearby-summary></p>
+          <ul class="pc-nearby__list" data-pc-nearby></ul>
+          <a class="link-arrow" href="/bushfires/">All current bushfires <i aria-hidden="true">&rarr;</i></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="warning-note pc-note" role="note">
+      <strong>Indicative only. This is not a BAL assessment.</strong>
+      <p>This tool shows state government mapping at one point on the map. The mapping can be out of date or differ from your council's planning scheme, and the address search can place the pin on the wrong part of a lot. A Bushfire Attack Level depends on the vegetation, slope and distances measured on site. Do not rely on this result for a purchase, design or approval decision.</p>
+      <p class="pc-sources" data-pc-sources></p>
+    </div>
+  </section>
+
+  <script is:inline src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js" defer></script>
+  <script is:inline>
+  addEventListener('load', () => {
+    const $ = (s) => document.querySelector(s);
+    const form = $('[data-pc-form]'), statusEl = $('[data-pc-status]'), section = $('[data-pc]');
+    const UA_NOTE = 'Your address is sent to OpenStreetMap to find its location. Nothing is stored by this site.';
+    const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    const getJSON = async (url) => { const r = await fetch(url); if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); };
+    const km = (a, b, c, d) => { const R = 6371, t = Math.PI / 180, x = (d - b) * t * Math.cos((a + c) * t / 2), y = (c - a) * t; return Math.sqrt(x * x + y * y) * R; };
+
+    /* ---------- State configuration: where the mapping comes from and how to read it ---------- */
+    const QLD_TILES = 'https://tiles.arcgis.com/tiles/vkTwD8kHw2woKBqV/arcgis/rest/services/BPA_2026/VectorTileServer/tile/{z}/{y}/{x}.pbf';
+    const QLD_PIB = 'https://services1.arcgis.com/vkTwD8kHw2woKBqV/arcgis/rest/services/WOS_PIB/FeatureServer/0/query';
+    const NSW_BFPL = 'https://mapprod3.environment.nsw.gov.au/arcgis/rest/services/Fire/BFPL/MapServer';
+    const VIC_WFS = 'https://opendata.maps.vic.gov.au/geoserver/wfs';
+    const VIC_WMS = 'https://opendata.maps.vic.gov.au/geoserver/wms?service=WMS&version=1.1.1&request=GetMap&styles=&format=image/png&transparent=true&srs=EPSG:3857&width=256&height=256&bbox={bbox-epsg-3857}';
+    const pointQ = (lng, lat) => `geometry=${lng},${lat}&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&returnGeometry=false&f=json`;
+    const vicQ = (type, props, lng, lat, extra = '') => `${VIC_WFS}?service=WFS&version=2.0.0&request=GetFeature&typeNames=open-data-platform:${type}&outputFormat=application/json&count=5&propertyName=${props}&cql_filter=${encodeURIComponent(`INTERSECTS(geom,SRID=4326;POINT(${lng} ${lat}))${extra}`)}`;
+
+    const STATES = {
+      QLD: {
+        name: 'Queensland', source: 'Bushfire prone area mapping 2026, Queensland Fire Department',
+        legend: [['#730000', 'Very high potential bushfire intensity'], ['#FF0000', 'High potential bushfire intensity'], ['#FFAA00', 'Medium potential bushfire intensity']],
+        legendNote: 'The potential impact buffer, about 100 metres around the coloured areas, is checked but not drawn.',
+        addLayers(map, lng, lat) {
+          map.addSource('qld-bpa', { type: 'vector', tiles: [QLD_TILES], maxzoom: 17 });
+          map.addLayer({ id: 'qld-bpa', type: 'fill', source: 'qld-bpa', 'source-layer': 'WOS_BPA_sp',
+            paint: { 'fill-opacity': .5, 'fill-color': ['match', ['get', '_symbol'], 2, '#730000', 0, '#FF0000', 1, '#FFAA00', '#FFAA00'] } });
+        },
+        async check(map, lng, lat) {
+          const classes = { 2: 'Very high potential bushfire intensity', 0: 'High potential bushfire intensity', 1: 'Medium potential bushfire intensity' };
+          await new Promise((res) => (map.isSourceLoaded('qld-bpa') && map.areTilesLoaded() ? res() : map.once('idle', res)));
+          const hit = map.queryRenderedFeatures(map.project([lng, lat]), { layers: ['qld-bpa'] })[0];
+          const buffer = await getJSON(`${QLD_PIB}?${pointQ(lng, lat)}&returnCountOnly=true`).then((r) => r.count > 0).catch(() => null);
+          const rows = [['Bushfire prone area', hit ? 'Yes' : buffer ? 'Yes (buffer)' : 'No'], ['Mapped class', hit ? classes[hit.properties._symbol] ?? 'Mapped vegetation' : buffer ? 'Potential impact buffer' : 'None at this point']];
+          if (hit) return { level: hit.properties._symbol === 1 ? 'mid' : 'high', title: 'Inside a mapped bushfire prone area', text: `${classes[hit.properties._symbol] ?? 'Mapped hazardous vegetation'} at this point.`, rows,
+            meaning: 'This point is inside Queensland\'s state bushfire prone area mapping. Building or developing here will usually need a site-specific bushfire assessment against your council\'s bushfire overlay code, and new homes are built to a Bushfire Attack Level under AS 3959.' };
+          if (buffer) return { level: 'mid', title: 'Inside the potential impact buffer', text: 'Within 100 metres of mapped hazardous vegetation.', rows,
+            meaning: 'This point is in the potential impact buffer, the strip around mapped hazardous vegetation that can be affected by ember attack and radiant heat. It is part of the bushfire prone area, so a bushfire assessment and a BAL rating will usually be needed for new building work.' };
+          return { level: 'low', title: 'Not in the mapped bushfire prone area', text: 'No state bushfire prone area mapping at this point.', rows,
+            meaning: 'The state mapping does not show a bushfire prone area at this point. Your council\'s planning scheme overlay can still differ from the state mapping, so check the council mapping before relying on this.' };
+        },
+      },
+      NSW: {
+        name: 'New South Wales', source: 'Bush Fire Prone Land, NSW Rural Fire Service',
+        legend: [['#ff0000', 'Vegetation Category 1 (highest risk)'], ['#ffaa00', 'Vegetation Category 3 (medium risk)'], ['#ffd37f', 'Vegetation Category 2 (lower risk)'], ['#ffffbe', 'Vegetation buffer']],
+        addLayers(map) {
+          map.addSource('nsw-bfpl', { type: 'raster', tileSize: 256, tiles: [`${NSW_BFPL}/export?bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&size=256,256&format=png32&transparent=true&f=image`] });
+          map.addLayer({ id: 'nsw-bfpl', type: 'raster', source: 'nsw-bfpl', paint: { 'raster-opacity': .6 } });
+        },
+        async check(map, lng, lat) {
+          const r = await getJSON(`${NSW_BFPL}/0/query?${pointQ(lng, lat)}&outFields=Category,d_Category,d_Guidelin`);
+          const f = r.features?.[0]?.attributes;
+          const cat = f ? (f.d_Category || `Category ${f.Category}`) : null;
+          const rows = [['Bush fire prone land', f ? 'Yes' : 'No'], ['Mapped category', cat ?? 'None at this point']];
+          if (f?.d_Guidelin) rows.push(['Mapping guideline', f.d_Guidelin]);
+          if (f) return { level: /buffer/i.test(cat) ? 'mid' : 'high', title: 'On mapped bush fire prone land', text: `${cat} at this point.`, rows,
+            meaning: 'This point is on the NSW bush fire prone land map. A development application here has to comply with Planning for Bush Fire Protection 2019 and will need a bush fire assessment report. Complying development needs a BAL certificate, and is not available at BAL-40 or BAL-FZ.' };
+          return { level: 'low', title: 'Not on mapped bush fire prone land', text: 'No bush fire prone land mapping at this point.', rows,
+            meaning: 'The statewide map does not show bush fire prone land at this point. The certified map held by your council is the legal reference, and it is noted on the property\'s section 10.7 planning certificate.' };
+        },
+      },
+      VIC: {
+        name: 'Victoria', source: 'Designated Bushfire Prone Area and planning scheme overlays, Vicmap (State of Victoria)',
+        legend: [['#f7861c', 'Bushfire Prone Area (BPA)'], ['#c21d22', 'Bushfire Management Overlay (BMO)']],
+        addLayers(map) {
+          map.addSource('vic-bpa', { type: 'raster', tileSize: 256, tiles: [`${VIC_WMS}&layers=open-data-platform:bushfire_prone_area`] });
+          map.addLayer({ id: 'vic-bpa', type: 'raster', source: 'vic-bpa', paint: { 'raster-opacity': .45 } });
+          map.addSource('vic-bmo', { type: 'raster', tileSize: 256, tiles: [`${VIC_WMS}&layers=open-data-platform:plan_overlay&cql_filter=${encodeURIComponent("zone_code LIKE 'BMO%' OR zone_code LIKE 'WMO%'")}`] });
+          map.addLayer({ id: 'vic-bmo', type: 'raster', source: 'vic-bmo', paint: { 'raster-opacity': .55 } });
+        },
+        async check(map, lng, lat) {
+          const [bpa, bmo] = await Promise.all([
+            getJSON(vicQ('bushfire_prone_area', 'lga_name', lng, lat)),
+            getJSON(vicQ('plan_overlay', 'zone_code,zone_description,lga', lng, lat, " AND (zone_code LIKE 'BMO%' OR zone_code LIKE 'WMO%')")),
+          ]);
+          const inBpa = bpa.features.length > 0, o = bmo.features[0]?.properties;
+          const lga = bpa.features[0]?.properties.lga_name || o?.lga;
+          const rows = [['Bushfire Prone Area (BPA)', inBpa ? 'Yes' : 'No'], ['Bushfire Management Overlay (BMO)', o ? `Yes (${o.zone_code})` : 'No']];
+          if (lga) rows.push(['Council', lga.replace(/\w\S*/g, (w) => w[0] + w.slice(1).toLowerCase())]);
+          if (o) return { level: 'high', title: 'Inside the Bushfire Management Overlay', text: 'A planning overlay for land that may be exposed to extreme bushfire.', rows,
+            meaning: 'This point is inside the Bushfire Management Overlay. A planning permit is usually needed to build or subdivide, supported by a bushfire hazard site assessment, a landscape assessment and a bushfire management statement. The land is also in a Bushfire Prone Area, so construction is to a Bushfire Attack Level under AS 3959.' };
+          if (inBpa) return { level: 'mid', title: 'Inside a designated Bushfire Prone Area', text: 'Bushfire construction requirements apply here.', rows,
+            meaning: 'This point is in a designated Bushfire Prone Area. New homes and some other buildings need a Bushfire Attack Level assessment and must be built to at least BAL-12.5 under AS 3959. It is not inside the Bushfire Management Overlay, so the overlay\'s planning permit trigger does not apply.' };
+          return { level: 'low', title: 'Not in a designated Bushfire Prone Area', text: 'No BPA or Bushfire Management Overlay at this point.', rows,
+            meaning: 'The Vicmap data does not show a Bushfire Prone Area or Bushfire Management Overlay at this point. Designations are updated regularly, so confirm on VicPlan or a planning property report before relying on this.' };
+        },
+      },
+    };
+    const ISO = { 'AU-QLD': 'QLD', 'AU-NSW': 'NSW', 'AU-VIC': 'VIC' };
+    const OTHER = { 'AU-SA': 'South Australia', 'AU-WA': 'Western Australia', 'AU-TAS': 'Tasmania', 'AU-NT': 'the Northern Territory', 'AU-ACT': 'the Australian Capital Territory' };
+
+    /* ---------- Map ---------- */
+    let map = null, marker = null, current = null, run = 0;
+    function ensureMap(lng, lat) {
+      if (map) return Promise.resolve();
+      map = new maplibregl.Map({
+        container: 'pc-map', center: [lng, lat], zoom: 16, maxZoom: 19, attributionControl: { compact: true },
+        style: { version: 8, sources: { aerial: { type: 'raster', tileSize: 256, maxzoom: 19,
+          tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],
+          attribution: 'Imagery &copy; Esri, Maxar, Earthstar Geographics' } }, layers: [{ id: 'aerial', type: 'raster', source: 'aerial' }] },
+      });
+      map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-left');
+      map.scrollZoom.disable();
+      marker = new maplibregl.Marker({ color: '#ffffff' }).setLngLat([lng, lat]).addTo(map);
+      map.on('click', (e) => locate(e.lngLat.lng, e.lngLat.lat));
+      return new Promise((res) => map.on('load', res));
+    }
+    function setStateLayers(code, lng, lat) {
+      if (current === code) return;
+      ['qld-bpa', 'qld-pib', 'nsw-bfpl', 'vic-bpa', 'vic-bmo'].forEach((id) => { if (map.getLayer(id)) map.removeLayer(id); if (map.getSource(id)) map.removeSource(id); });
+      current = code;
+      if (!code) return;
+      STATES[code].addLayers(map, lng, lat);
+      $('[data-pc-legend]').innerHTML = STATES[code].legend.map(([c, l]) => `<li class="lvl" style="--c:${c}">${esc(l)}</li>`).join('') + (STATES[code].legendNote ? `<li class="pc-legend__note">${esc(STATES[code].legendNote)}</li>` : '');
+    }
+
+    /* ---------- Nearby fires (from this site's own feed data) ---------- */
+    let feedCache = null;
+    const feeds = () => feedCache ??= Promise.all([
+      getJSON('/data/incidents.json').catch(() => ({ incidents: [] })),
+      getJSON('/data/hotspots.json').catch(() => ({ cells: [] })),
+    ]);
+    async function nearby(lng, lat) {
+      const [inc, hot] = await feeds();
+      const near = inc.incidents.filter((i) => i.lat && i.lng).map((i) => ({ ...i, d: km(lat, lng, i.lat, i.lng) })).filter((i) => i.d <= 50).sort((a, b) => a.d - b.d);
+      const hotCount = hot.cells.filter(([la, lo]) => km(lat, lng, la, lo) <= 25).reduce((n, c) => n + c[2], 0);
+      $('[data-pc-nearby-summary]').textContent = `${near.length} current bushfire or grass fire incident${near.length === 1 ? '' : 's'} within 50 km, and ${hotCount.toLocaleString('en-AU')} satellite hotspot detection${hotCount === 1 ? '' : 's'} within 25 km in the last 24 hours.`;
+      $('[data-pc-nearby]').innerHTML = near.slice(0, 5).map((i) => `<li><span class="lvl" style="--c:${{ 'Emergency Warning': '#ff5a4d', 'Watch and Act': '#f7861c', Advice: '#f2c94c' }[i.level] || '#8f8577'}">${esc(i.level || 'No warning level')}</span><strong>${esc(i.name)}</strong><span class="muted">${i.d.toFixed(1)} km away &middot; ${esc(i.status || '')}</span></li>`).join('');
+    }
+
+    /* ---------- Run a check at a point ---------- */
+    async function locate(lng, lat, known) {
+      const id = ++run;
+      statusEl.textContent = 'Checking the bushfire mapping…';
+      try {
+        // what state is this point in, and what is the address?
+        const place = known ?? await getJSON(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&addressdetails=1&zoom=18&lat=${lat}&lon=${lng}`);
+        if (id !== run) return;
+        const iso = place.address?.['ISO3166-2-lvl4'], code = ISO[iso];
+        section.hidden = false;
+        await ensureMap(lng, lat);
+        marker.setLngLat([lng, lat]);
+        if (known) map.jumpTo({ center: [lng, lat], zoom: 16 });
+        map.resize();
+        const verdict = $('[data-pc-verdict]');
+        const baseRows = [['Location', place.display_name?.replace(/, Australia$/, '') ?? 'Selected point'], ['Coordinates', `${lat.toFixed(5)}, ${lng.toFixed(5)}`]];
+        if (!code) {
+          setStateLayers(null);
+          $('[data-pc-legend]').innerHTML = '';
+          verdict.dataset.level = 'none';
+          $('[data-pc-label]').textContent = 'Not covered';
+          $('[data-pc-title]').textContent = OTHER[iso] ? `This tool does not cover ${OTHER[iso]} yet` : 'This point is outside Queensland, NSW and Victoria';
+          $('[data-pc-text]').textContent = 'Bushfire mapping is available here for Queensland, New South Wales and Victoria.';
+          $('[data-pc-meaning]').textContent = 'Contact us and we can check the bushfire mapping for this property for you.';
+          $('[data-pc-list]').innerHTML = baseRows.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('');
+          $('[data-pc-sources]').textContent = '';
+        } else {
+          const st = STATES[code];
+          setStateLayers(code, lng, lat);
+          verdict.dataset.level = 'loading';
+          $('[data-pc-label]').textContent = st.name; $('[data-pc-title]').textContent = 'Checking…'; $('[data-pc-text]').textContent = '';
+          const res = await st.check(map, lng, lat);
+          if (id !== run) return;
+          verdict.dataset.level = res.level;
+          $('[data-pc-label]').textContent = `${st.name} bushfire mapping`;
+          $('[data-pc-title]').textContent = res.title;
+          $('[data-pc-text]').textContent = res.text;
+          $('[data-pc-meaning]').textContent = res.meaning;
+          $('[data-pc-list]').innerHTML = [...baseRows, ...res.rows].map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('');
+          $('[data-pc-sources]').textContent = `Mapping: ${st.source}. Address search: OpenStreetMap Nominatim. Aerial imagery: Esri World Imagery. Checked ${new Date().toLocaleString('en-AU', { dateStyle: 'medium', timeStyle: 'short' })}.`;
+          const sel = document.querySelector('[data-state-select]'); if (sel && sel.querySelector(`option[value="${code.toLowerCase()}"]`)) sel.value = code.toLowerCase();
+        }
+        nearby(lng, lat).catch(() => {});
+        statusEl.textContent = UA_NOTE;
+        if (window.ScrollTrigger) ScrollTrigger.refresh();
+      } catch (err) {
+        if (id !== run) return;
+        statusEl.textContent = 'The mapping service did not respond. Please try again in a moment.';
+        const v = $('[data-pc-verdict]'); if (v.dataset.level === 'loading') { v.dataset.level = 'none'; $('[data-pc-title]').textContent = 'Could not load the mapping'; }
+      }
+    }
+
+    const preset = new URLSearchParams(location.search).get('address');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const q = form.address.value.trim(); if (!q) return;
+      if (!window.maplibregl) { statusEl.textContent = 'The map could not be loaded. Check your connection and reload the page.'; return; }
+      statusEl.textContent = 'Finding the address…';
+      try {
+        const hits = await getJSON(`https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&countrycodes=au&limit=1&q=${encodeURIComponent(q)}`);
+        if (!hits.length) { statusEl.textContent = 'That address was not found. Try adding the suburb and state, or a nearby street.'; return; }
+        await locate(+hits[0].lon, +hits[0].lat, hits[0]);
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } catch (err) { statusEl.textContent = 'The address search did not respond. Please try again in a moment.'; }
+    });
+    if (preset) { form.address.value = preset; form.requestSubmit(); }
+  });
+  </script>
+</Base>

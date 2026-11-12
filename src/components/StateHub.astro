@@ -15,7 +15,7 @@ const crumbs = [{ label: st.name, href: `/${code}/` }];
   <div class="container split block">
     <Sections sections={st.framework} />
     <aside class="aside" data-reveal>
-      <img src={`/assets/brand/logo-${code}.webp`} alt={`Bushfire Assessments ${st.name} logo`} width="348" height="345" loading="lazy">
+      <img src={`/assets/brand/logo-${code}.webp`} alt={`Bushfire Assessments ${st.name} logo`} width="440" height="436" loading="lazy">
       <h2 class="aside__title">Services in {st.short}</h2>
       {services.map((s) => <a class="aside__link" href={`/services/${s.slug}/`}>{s.name} <i aria-hidden="true">&rarr;</i></a>)}
     </aside>

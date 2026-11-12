@@ -24,7 +24,7 @@ for (const file of walk(DIST)) {
   const after = before
     .replace(/\b(href|src|action)="\/(?!\/)/g, `$1="${base}/`)        // attributes
     .replace(/url\((['"]?)\/(?!\/)/g, `url($1${base}/`)                        // CSS
-    .replace(/fetch\((['"])\/(?!\/)/g, `fetch($1${base}/`)                     // inline scripts
+    .replace(/(fetch|getJSON)\((['"])\/(?!\/)/g, `$1($2${base}/`)                     // inline scripts
     .replaceAll(`${site}/`, `${site}${base}/`).replaceAll(`${site}${base}${base}/`, `${site}${base}/`); // absolute URLs (canonical, sitemap, feed, schema)
   if (after !== before) { writeFileSync(file, after); count++; }
 }

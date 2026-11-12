@@ -179,4 +179,8 @@ try {
 const rank = (i) => (i.level ? LEVELS.length - LEVELS.indexOf(i.level) : 0);
 incidents.sort((a, b) => rank(b) - rank(a) || String(b.updated).localeCompare(String(a.updated)));
 writeFileSync(OUT, JSON.stringify({ generatedAt: now, sources, hotspots, incidents }, null, 1) + '\n');
+// light copy for the property check page (nearby fires)
+mkdirSync(fileURLToPath(new URL('../public/data/', import.meta.url)), { recursive: true });
+writeFileSync(fileURLToPath(new URL('../public/data/incidents.json', import.meta.url)),
+  JSON.stringify({ generatedAt: now, incidents: incidents.map(({ state, name, level, status, lat, lng }) => ({ state, name, level, status, lat, lng })) }));
 console.log(`[incidents] wrote ${incidents.length} incidents`);

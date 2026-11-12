@@ -6,5 +6,5 @@ export const faqs = [
   { q: 'Can my BAL rating be reduced?', a: 'Sometimes. Moving the building footprint, increasing separation from vegetation or establishing an asset protection zone can lower the rating. We outline the options that apply to your site.' },
   { q: 'What is the difference between a BAL assessment and a bushfire hazard report?', a: 'A BAL assessment rates a single building. A bushfire hazard report, or bush fire assessment report in NSW, looks at a whole development against the planning requirements, including access, water supply and asset protection zones.' },
   { q: 'Do you work with builders and designers?', a: 'Yes. We work with builders, architects, building designers and town planners, and getting bushfire advice at concept stage usually saves redesign later.' },
-  { q: 'Which areas do you cover?', a: 'We assess sites across Queensland and New South Wales, with an office in Tenterfield serving northern NSW and southern Queensland.' },
+  { q: 'Which areas do you cover?', a: 'We assess sites across Queensland, New South Wales and Victoria. Our head office is in Victoria, and our Tenterfield office serves northern NSW and southern Queensland.' },
 ];

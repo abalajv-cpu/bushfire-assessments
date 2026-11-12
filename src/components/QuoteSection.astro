@@ -8,7 +8,7 @@ const { state = null, heading = 'Tell us about your site.' } = Astro.props;
     <div>
       <p class="eyebrow" data-reveal>Get started</p>
       <h2 class="h1" data-split>{heading}</h2>
-      <p class="muted" data-reveal>Send the address and what you are planning. We will come back with a quote for your <span data-qld="Queensland" data-nsw="New South Wales">{state === 'nsw' ? 'New South Wales' : 'Queensland'}</span> property.</p>
+      <p class="muted" data-reveal>Send the address and what you are planning. We will come back with a quote for your <span data-qld="Queensland" data-nsw="New South Wales" data-vic="Victorian">{state === 'nsw' ? 'New South Wales' : state === 'vic' ? 'Victorian' : 'Queensland'}</span> property.</p>
       <ul class="contact-list" data-reveal>
         <li><span>Call</span><a href={site.phoneHref}>{site.phone}</a></li>
         <li><span>Email</span><a href={`mailto:${site.email}`}>{site.email}</a></li>
@@ -26,6 +26,7 @@ const { state = null, heading = 'Tell us about your site.' } = Astro.props;
           <select name="state" data-state-select>
             <option value="qld">Queensland</option>
             <option value="nsw">New South Wales</option>
+            <option value="vic">Victoria</option>
           </select>
         </label>
         <label>Project type
