@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-12T01:38:21.137Z",
+ "generatedAt": "2026-11-12T01:59:48.053Z",
  "sources": [
   {
    "state": "NSW",
@@ -8,8 +8,8 @@
    "site": "https://www.rfs.nsw.gov.au/fire-information/fires-near-me",
    "feed": true,
    "ok": true,
-   "count": 34,
-   "fetchedAt": "2026-11-12T01:38:21.137Z"
+   "count": 35,
+   "fetchedAt": "2026-11-12T01:59:48.053Z"
   },
   {
    "state": "QLD",
@@ -19,7 +19,7 @@
    "feed": true,
    "ok": true,
    "count": 41,
-   "fetchedAt": "2026-11-12T01:38:21.137Z"
+   "fetchedAt": "2026-11-12T01:59:48.053Z"
   },
   {
    "state": "VIC",
@@ -28,8 +28,8 @@
    "site": "https://emergency.vic.gov.au/respond/",
    "feed": true,
    "ok": true,
-   "count": 5,
-   "fetchedAt": "2026-11-12T01:38:21.137Z"
+   "count": 6,
+   "fetchedAt": "2026-11-12T01:59:48.053Z"
   },
   {
    "state": "WA",
@@ -38,8 +38,8 @@
    "site": "https://www.emergency.wa.gov.au/",
    "feed": true,
    "ok": true,
-   "count": 47,
-   "fetchedAt": "2026-11-12T01:38:21.137Z"
+   "count": 44,
+   "fetchedAt": "2026-11-12T01:59:48.053Z"
   },
   {
    "state": "SA",
@@ -59,7 +59,7 @@
    "feed": true,
    "ok": true,
    "count": 0,
-   "fetchedAt": "2026-11-12T01:38:21.137Z"
+   "fetchedAt": "2026-11-12T01:59:48.053Z"
   },
   {
    "state": "TAS",
@@ -87,14 +87,14 @@
   "agency": "Geoscience Australia",
   "site": "https://hotspots.dea.ga.gov.au/",
   "ok": true,
-  "fetchedAt": "2026-11-12T01:38:21.137Z",
-  "total": 52253,
+  "fetchedAt": "2026-11-12T01:59:48.053Z",
+  "total": 52206,
   "byState": {
-   "QLD": 27644,
-   "NT": 11353,
-   "WA": 11519,
-   "NSW": 826,
-   "SA": 627,
+   "QLD": 27628,
+   "NT": 11246,
+   "WA": 11593,
+   "NSW": 835,
+   "SA": 620,
    "VIC": 189,
    "TAS": 95
   }
@@ -494,6 +494,34 @@
   },
   {
    "state": "VIC",
+   "id": "vic-ESTA:261113021",
+   "name": "Numurkah",
+   "location": "Numurkah",
+   "area": null,
+   "level": null,
+   "status": "Safe",
+   "type": "Bushfire",
+   "sizeHa": null,
+   "updated": "2026-11-12T01:49:00.000Z",
+   "lat": -36.07422914218413,
+   "lng": 145.38609422159072
+  },
+  {
+   "state": "NSW",
+   "id": "nsw-685265",
+   "name": "Johns River Rd, Johns River",
+   "location": "Johns River Rd, Johns River",
+   "area": "Mid-Coast",
+   "level": null,
+   "status": "Responding",
+   "type": "Bush Fire",
+   "sizeHa": 0,
+   "updated": "2026-11-12T01:43:00.000Z",
+   "lat": -31.731599998999968,
+   "lng": 152.69200000000012
+  },
+  {
+   "state": "VIC",
    "id": "vic-ESTA:261112989",
    "name": "Hume In-Bandiana Link Ramp",
    "location": "Hume In-Bandiana Link Ramp, Wodonga",
@@ -541,7 +569,7 @@
    "location": "Katamatite-Nathalia Rd, Numurkah",
    "area": null,
    "level": null,
-   "status": "Responding",
+   "status": "Not Yet Under Control",
    "type": "Bushfire",
    "sizeHa": null,
    "updated": "2026-11-12T01:27:00.000Z",
@@ -1530,20 +1558,6 @@
   },
   {
    "state": "WA",
-   "id": "wa-6aefd75ff00f9611c5b8130d",
-   "name": "Prince Regent River",
-   "location": "Prince Regent River",
-   "area": "Shire Of Wyndham-East Kimberley",
-   "level": null,
-   "status": "Monitoring",
-   "type": "Bushfire",
-   "sizeHa": null,
-   "updated": "2026-11-08T01:59:55.000Z",
-   "lat": -15.700038,
-   "lng": 125.644484
-  },
-  {
-   "state": "WA",
    "id": "wa-6aefc6d984587b8f3dcbc5f6",
    "name": "Bularl Di Wunami",
    "location": "Bularl Di Wunami",
@@ -1569,20 +1583,6 @@
    "updated": "2026-11-07T22:44:41.000Z",
    "lat": -15.583308,
    "lng": 128.303647
-  },
-  {
-   "state": "WA",
-   "id": "wa-6aef96f8ed39f4db996d1507",
-   "name": "Purnululu",
-   "location": "Purnululu",
-   "area": "Shire Of Halls Creek",
-   "level": null,
-   "status": "Monitoring",
-   "type": "Bushfire",
-   "sizeHa": null,
-   "updated": "2026-11-07T22:43:50.000Z",
-   "lat": -17.453649,
-   "lng": 128.467915
   },
   {
    "state": "WA",
@@ -1653,20 +1653,6 @@
    "updated": "2026-11-07T07:29:06.000Z",
    "lat": -18.350622,
    "lng": 128.196055
-  },
-  {
-   "state": "WA",
-   "id": "wa-6aeece5a0ba6661d22f20eac",
-   "name": "Exmouth Gulf",
-   "location": "Exmouth Gulf",
-   "area": "Shire Of Exmouth",
-   "level": null,
-   "status": "Monitoring",
-   "type": "Bushfire",
-   "sizeHa": null,
-   "updated": "2026-11-07T07:08:40.000Z",
-   "lat": -22.642098,
-   "lng": 114.175026
   },
   {
    "state": "WA",

@@ -1,13 +1,13 @@
 ---
 title: "Bushfire update: week of 9 November 2026"
-description: "Current bushfires across Australia as at 12 November 2026: 127 incidents listed by state fire services, with 0 at Emergency Warning and 1 at Watch and Act."
+description: "Current bushfires across Australia as at 12 November 2026: 126 incidents listed by state fire services, with 0 at Emergency Warning and 1 at Watch and Act."
 date: 2026-11-09
-updated: 2026-11-12T01:37:28.133Z
+updated: 2026-11-12T01:59:48.053Z
 category: "Bushfire updates"
 draft: false
 ---
 
-As at Thursday 12 November 2026 at 12:37 pm AEDT, state fire services were listing **127 bushfire and grass fire incidents** across New South Wales, Queensland, Victoria, Western Australia and Australian Capital Territory.
+As at Thursday 12 November 2026 at 12:59 pm AEDT, state fire services were listing **126 bushfire and grass fire incidents** across New South Wales, Queensland, Victoria, Western Australia and Australian Capital Territory.
 
 Of those, **0** were at Emergency Warning, **1** at Watch and Act and **27** at Advice.
 
@@ -17,7 +17,7 @@ See the [live current bushfires page](/bushfires/) for the latest list.
 
 ## New South Wales
 
-NSW Rural Fire Service was listing 34 incidents, including 1 at Watch and Act, 23 at Advice.
+NSW Rural Fire Service was listing 35 incidents, including 1 at Watch and Act, 23 at Advice.
 
 | Incident | Alert level | Status | Size |
 | --- | --- | --- | --- |
@@ -46,7 +46,7 @@ Incidents at a warning level are shown. Source: [Queensland Fire Department](htt
 
 ## Victoria
 
-VicEmergency was listing 5 incidents, including 1 at Advice.
+VicEmergency was listing 6 incidents, including 1 at Advice.
 
 | Incident | Alert level | Status | Size |
 | --- | --- | --- | --- |
@@ -56,7 +56,7 @@ Incidents at a warning level are shown. Source: [VicEmergency](https://emergency
 
 ## Western Australia
 
-Emergency WA was listing 47 incidents, none at a warning level.
+Emergency WA was listing 44 incidents, none at a warning level.
 
 | Incident | Alert level | Status | Size |
 | --- | --- | --- | --- |
@@ -77,17 +77,17 @@ ACT Emergency Services Agency was not listing any bushfire or grass fire inciden
 
 ## Satellite hotspots
 
-Satellites recorded **52,253 fire hotspot detections** across Australia in the 24 hours before this update. Hotspots are heat detections, not confirmed bushfires. One fire is usually detected many times, and the count includes planned burns and other heat sources. They are the only data shown here for states without an incident feed.
+Satellites recorded **52,206 fire hotspot detections** across Australia in the 24 hours before this update. Hotspots are heat detections, not confirmed bushfires. One fire is usually detected many times, and the count includes planned burns and other heat sources. They are the only data shown here for states without an incident feed.
 
 | State or territory | Hotspots in 24 hours |
 | --- | --- |
-| New South Wales | 826 |
-| Queensland | 27,644 |
+| New South Wales | 835 |
+| Queensland | 27,628 |
 | Victoria | 189 |
-| Western Australia | 11,519 |
-| South Australia | 627 |
+| Western Australia | 11,593 |
+| South Australia | 620 |
 | Tasmania | 95 |
-| Northern Territory | 11,353 |
+| Northern Territory | 11,246 |
 
 Source: [Digital Earth Australia Hotspots](https://hotspots.dea.ga.gov.au/), Geoscience Australia. Hotspot data is not real time and must not be used for safety decisions.
 
