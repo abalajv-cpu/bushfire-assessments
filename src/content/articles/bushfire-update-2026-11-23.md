@@ -1,15 +1,15 @@
 ---
 title: "Bushfire update: week of 23 November 2026"
-description: "Current bushfires across Australia as at 26 November 2026: 87 incidents listed by state fire services, with 0 at Emergency Warning and 0 at Watch and Act."
+description: "Current bushfires across Australia as at 27 November 2026: 68 incidents listed by state fire services, with 0 at Emergency Warning and 0 at Watch and Act."
 date: 2026-11-23
-updated: 2026-11-26T05:28:25.158Z
+updated: 2026-11-27T09:03:47.827Z
 category: "Bushfire updates"
 draft: false
 ---
 
-As at Thursday 26 November 2026 at 4:28 pm AEDT, state fire services were listing **87 bushfire and grass fire incidents** across New South Wales, Queensland, Victoria, Western Australia and Australian Capital Territory.
+As at Friday 27 November 2026 at 8:03 pm AEDT, state fire services were listing **68 bushfire and grass fire incidents** across New South Wales, Queensland, Victoria, Western Australia and Australian Capital Territory.
 
-Of those, **0** were at Emergency Warning, **0** at Watch and Act and **12** at Advice.
+Of those, **0** were at Emergency Warning, **0** at Watch and Act and **9** at Advice.
 
 > This is an automated summary of public fire service data and can be out of date within minutes. It is not a warning service. In an emergency call Triple Zero (000), and always check your state fire service for current warnings.
 
@@ -17,43 +17,34 @@ See the [live current bushfires page](/bushfires/) for the latest list.
 
 ## New South Wales
 
-NSW Rural Fire Service was listing 10 incidents, including 8 at Advice.
+NSW Rural Fire Service was listing 9 incidents, including 7 at Advice.
 
 | Incident | Alert level | Status | Size |
 | --- | --- | --- | --- |
-| Northcliffe Dr, Berkeley (Wollongong) | Advice | Under control | - |
-| Waugorah Rd, Waugorah (Murray River) | Advice | Under control | - |
+| Ash Trl, Stanford Merthyr (Cessnock) | Advice | Not yet controlled | - |
+| Poplar Av, Leeton (Leeton) | Advice | Not yet controlled | - |
+| Emperor Pl, Kenthurst (The Hills) | Advice | Under control | - |
 | Beecroft Weapons Range Beecroft Peninsula (Shoalhaven) | Advice | Under control | 410 ha |
-| Bryces Road Fire (Eurobodalla) | Advice | Under control | 7 ha |
-| Bull Rd, Coleambally (Murrumbidgee) | Advice | Under control | - |
-| Lower River Rd, Tocumwal (Berrigan) | Advice | Not yet controlled | 5 ha |
 | Red Point Rd, Wollumboola (Shoalhaven) | Advice | Under control | - |
-| Oxley Hwy, Woolbrook (Walcha) | Advice | Under control | 2 ha |
+| Booligal Rd, Gunbar (Carrathool) | Advice | Under control | 2 ha |
+| Bryces Road Fire (Eurobodalla) | Advice | Under control | 7 ha |
 
 Incidents at a warning level are shown. Source: [NSW Rural Fire Service](https://www.rfs.nsw.gov.au/fire-information/fires-near-me).
 
 ## Queensland
 
-Queensland Fire Department was listing 38 incidents, including 4 at Advice.
+Queensland Fire Department was listing 21 incidents, including 2 at Advice.
 
 | Incident | Alert level | Status | Size |
 | --- | --- | --- | --- |
-| Mount Garnett | Advice | Avoid Smoke | - |
-| Irvinebank | Advice | Stay Informed | - |
-| Cardwell and surrounding areas | Advice | Avoid Smoke | - |
-| Nolan's Brook Creek and surrounding areas | Advice | Avoid Smoke | - |
+| Mount Garnet | Advice | Avoid Smoke | - |
+| Wongabel, Carrington and surrounding areas | Advice | Avoid Smoke | - |
 
 Incidents at a warning level are shown. Source: [Queensland Fire Department](https://www.fire.qld.gov.au/Current-Incidents).
 
 ## Victoria
 
-VicEmergency was listing 1 incident, none at a warning level.
-
-| Incident | Alert level | Status | Size |
-| --- | --- | --- | --- |
-| Corop - Pineo Road | - | Under Control | 4.4 ha |
-
-The largest listed incidents are shown. Source: [VicEmergency](https://emergency.vic.gov.au/respond/).
+VicEmergency was not listing any bushfire or grass fire incidents.
 
 ## Western Australia
 
@@ -61,14 +52,14 @@ Emergency WA was listing 38 incidents, none at a warning level.
 
 | Incident | Alert level | Status | Size |
 | --- | --- | --- | --- |
-| Nyabing (Shire Of Kent) | - | Responding | - |
-| Wilyabrup (City Of Busselton) | - | On scene | - |
-| Picton (City Of Bunbury) | - | Responding | - |
-| Beechboro (City Of Swan) | - | Monitoring | - |
-| Hope Valley (City Of Kwinana) | - | On scene | - |
-| Purnululu (Shire Of Halls Creek) | - | Monitoring | - |
-| Mueller Ranges (Shire Of Halls Creek) | - | Monitoring | - |
-| Watercarrin (Shire Of Cunderdin) | - | Monitoring | - |
+| Durack (Shire Of Wyndham-East Kimberley) | - | Monitoring | - |
+| South Hedland (Town Of Port Hedland) | - | Responding | - |
+| Bularl Di Wunami (Shire Of Derby/West Kimberley) | - | Monitoring | - |
+| Boyup Brook (Shire Of Boyup Brook) | - | Monitoring | - |
+| Wellesley (Shire Of Harvey) | - | On scene | - |
+| Arrowsmith East (Shire Of Three Springs) | - | Monitoring | - |
+| Highbury (Shire Of Narrogin) | - | Monitoring | - |
+| Wagin (Shire Of Wagin) | - | On scene | - |
 
 The largest listed incidents are shown. Source: [Emergency WA](https://www.emergency.wa.gov.au/).
 
@@ -78,17 +69,17 @@ ACT Emergency Services Agency was not listing any bushfire or grass fire inciden
 
 ## Satellite hotspots
 
-Satellites recorded **35,923 fire hotspot detections** across Australia in the 24 hours before this update. Hotspots are heat detections, not confirmed bushfires. One fire is usually detected many times, and the count includes planned burns and other heat sources. They are the only data shown here for states without an incident feed.
+Satellites recorded **16,220 fire hotspot detections** across Australia in the 24 hours before this update. Hotspots are heat detections, not confirmed bushfires. One fire is usually detected many times, and the count includes planned burns and other heat sources. They are the only data shown here for states without an incident feed.
 
 | State or territory | Hotspots in 24 hours |
 | --- | --- |
-| New South Wales | 304 |
-| Queensland | 24,302 |
-| Victoria | 43 |
-| Western Australia | 7,281 |
-| South Australia | 1,035 |
-| Tasmania | 33 |
-| Northern Territory | 2,925 |
+| New South Wales | 58 |
+| Queensland | 9,909 |
+| Victoria | 8 |
+| Western Australia | 4,622 |
+| South Australia | 12 |
+| Tasmania | 12 |
+| Northern Territory | 1,599 |
 
 Source: [Digital Earth Australia Hotspots](https://hotspots.dea.ga.gov.au/), Geoscience Australia. Hotspot data is not real time and must not be used for safety decisions.
 
